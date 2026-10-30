@@ -1,0 +1,7 @@
+# Raw PubMed records, embeddings and intermediate tables are rebuilt by the pipeline
+# (and the raw records carry publisher abstracts, which are not redistributed).
+data/
+.venv/
+upstream_*/
+*.log
+__pycache__/

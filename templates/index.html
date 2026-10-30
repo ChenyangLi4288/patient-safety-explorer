@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>@@NAME@@ Explorer</title>
+<meta name="description" content="Interactive 2D semantic map of PubMed papers on patient safety, medical error, adverse events and quality of care, built from MedCPT embeddings. Search, browse by topic, find similar papers.">
+<meta property="og:title" content="@@NAME@@ Explorer">
+<meta property="og:description" content="Interactive 2D semantic map of PubMed papers on patient safety and quality of care, 2000–@@YEAR@@. Nearby points are similar papers.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:,">
+<script src="https://cdn.plot.ly/plotly-gl2d-2.35.2.min.js" charset="utf-8"></script>
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #111; --bg2: #1a1a1a; --border: #2a2a2a; --text: #eee; --muted: #9a9a9a;
+    --faint: #777; --accent: #6ea8fe; --button: #2b6cb0; --chip: #262626; --hover: #222;
+    --noise: #666;
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --bg: #fafafa; --bg2: #fff; --border: #ddd; --text: #1a1a1a; --muted: #666;
+    --faint: #888; --accent: #1c64d4; --button: #1c64d4; --chip: #eee; --hover: #f0f0f0;
+    --noise: #bbb;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; height: 100vh; display: flex; flex-direction: column;
+    background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  header {
+    display: flex; flex-wrap: wrap; gap: 10px 12px; align-items: center;
+    padding: 10px 16px; border-bottom: 1px solid var(--border);
+  }
+  h1 { font-size: 18px; margin: 0; font-weight: 600; white-space: nowrap; }
+  h1 small { color: var(--muted); font-weight: 400; }
+  input, select, button {
+    font: inherit; font-size: 14px; color: var(--text); background: var(--bg2);
+    border: 1px solid var(--border); border-radius: 6px;
+  }
+  #search { flex: 1 1 220px; max-width: 380px; padding: 7px 10px; }
+  input:focus, select:focus, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 0; }
+  select { padding: 6px 8px; }
+  button { padding: 6px 10px; cursor: pointer; }
+  button:hover:not(:disabled) { background: var(--hover); }
+  button:disabled { opacity: .5; cursor: default; }
+  #hits { color: var(--muted); font-size: 13px; min-width: 80px; }
+  .spacer { flex: 1; }
+  header a { color: var(--muted); font-size: 13px; text-decoration: none; }
+  header a:hover { text-decoration: underline; }
+  #filters { padding: 8px 16px; border-bottom: 1px solid var(--border); }
+  #filters[hidden] { display: none; }
+  .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 3px 0; }
+  .filter-row[hidden] { display: none; }
+  .filter-row > span { min-width: 100px; font-size: 13px; color: var(--muted); }
+  .filter-row button { font-size: 12px; padding: 4px 9px; border-radius: 999px; }
+  .filter-row button[aria-pressed="true"] { border-color: var(--accent); background: var(--chip); }
+  #filter-count { font-size: 12px; color: var(--muted); }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
+  main { display: flex; flex: 1; min-height: 0; }
+  #plot { flex: 1 1 620px; min-width: 0; }
+  #panel {
+    flex: 0 0 400px; overflow-y: auto;
+    padding: 16px; border-left: 1px solid var(--border); font-size: 14px; line-height: 1.5;
+  }
+  #panel h2 { font-size: 16px; margin: 0 0 8px; line-height: 1.35; }
+  #panel h3 { font-size: 13px; margin: 18px 0 6px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+  .authors { display: flex; flex-wrap: wrap; gap: 5px; margin: 0 0 12px; }
+  .authors button { font-size: 12px; padding: 3px 8px; border-radius: 999px; color: var(--accent); background: var(--chip); }
+  .abstract { color: var(--text); opacity: .85; }
+  .tldr { font-style: italic; margin: 0 0 12px; }
+  .hint { color: var(--faint); }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .actions a, .actions button {
+    padding: 6px 12px; border-radius: 6px; font-size: 13px; text-decoration: none;
+    border: 1px solid var(--border); background: var(--bg2); color: var(--text);
+  }
+  .actions a.primary { background: var(--button); border-color: var(--button); color: #fff; }
+  .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; background: var(--chip); color: var(--muted); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chips button { font-size: 12px; padding: 2px 9px; border-radius: 10px; background: var(--chip); border-color: transparent; color: var(--muted); }
+  .author-suggestions { max-height: 200px; overflow-y: auto; }
+  ul.list { list-style: none; margin: 0; padding: 0; }
+  ul.list li { display: flex; gap: 8px; align-items: baseline; padding: 6px 8px; margin: 0 -8px; border-radius: 6px; cursor: pointer; }
+  ul.list li:hover { background: var(--hover); }
+  ul.list li .n { color: var(--faint); font-size: 12px; margin-left: auto; flex: none; }
+  ul.list li .dot { transform: translateY(1px); }
+  ul.list li .sub { display: block; color: var(--faint); font-size: 12px; }
+  .row { display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .row h2 { margin: 0; }
+  .link { background: none; border: none; color: var(--accent); padding: 0; font-size: 13px; }
+  footer { padding: 10px 16px; color: var(--faint); font-size: 12px; border-top: 1px solid var(--border); }
+  footer a { color: var(--muted); }
+  @media (max-width: 800px) {
+    body { height: auto; min-height: 100vh; }
+    main { flex-direction: column; }
+    #plot { flex: none; height: 60vh; }
+    #panel { flex: none; border-left: none; border-top: 1px solid var(--border); }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>@@NAME@@ <small>Explorer</small></h1>
+  <input id="search" type="search" placeholder="Search titles, authors, affiliations, MeSH, journals…  ( / )" autocomplete="off" disabled aria-label="Search papers">
+  <label class="hint" for="search-scope">Search in</label>
+  <select id="search-scope"><option value="all">All fields</option><option value="authors">Authors &amp; affiliations</option></select>
+  <span id="hits" aria-live="polite"></span>
+  <button id="btn-topics" title="Browse topics">Topics</button>
+  <button id="btn-saved" title="Saved papers">★ Saved <span id="saved-n">0</span></button>
+  <span class="spacer"></span>
+  <button id="btn-theme" title="Toggle light/dark theme">Theme</button>
+  <a href="@@REPO_URL@@" target="_blank" rel="noopener">GitHub</a>
+</header>
+<div id="filters" aria-label="Paper filters">
+  <div id="period-filters" class="filter-row" role="group" aria-label="Publication period"></div>
+  <div id="type-filters" class="filter-row" role="group" aria-label="Study type"></div>
+  <button id="clear-filters" type="button">Clear filters</button>
+  <span id="filter-count" aria-live="polite"></span>
+</div>
+<main>
+  <div id="plot"></div>
+  <aside id="panel"><p class="hint">Loading papers…</p></aside>
+</main>
+<footer>
+  Derived from <a href="https://github.com/flecomet/neurips-explorer" target="_blank" rel="noopener">flecomet/neurips-explorer</a>
+  and <a href="https://github.com/dataplayer12/cvpr-explorer" target="_blank" rel="noopener">dataplayer12/cvpr-explorer</a>.
+  Paper metadata from <a href="@@SOURCE_URL@@" target="_blank" rel="noopener">@@SOURCE_NAME@@</a> (NLM); embeddings from
+  <a href="https://huggingface.co/ncbi/MedCPT-Article-Encoder" target="_blank" rel="noopener">MedCPT</a>.
+  Nearby points are semantically similar papers. Topic names were written by an AI model from each cluster's terms and sample titles.
+</footer>
+
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+const panel = $("panel"), search = $("search"), hits = $("hits"), plotEl = $("plot");
+const SAVED_KEY = "@@STORAGE_PREFIX@@:saved:@@YEAR@@";
+const MAX_LABELS = 40;
+
+let D = null;            // core payload (data.json): coordinates, titles, clusters, neighbours
+let X = null;            // details payload (details.json): abstracts etc.; null until loaded
+let haystack = null;     // lowercase search text per paper
+let colors = [];         // current marker color per paper
+let sizes = [];          // current marker size per paper
+let selectedPaper = -1;
+let activeCluster = null;      // subtopic id being browsed, or null
+let activeTopic = null;        // topic id being browsed, or null
+let query = "";
+let searchScope = "all";
+let selectedAuthors = [];
+const selectedPeriods = new Set();
+const selectedTypes = new Set();
+let authorIndex = null;        // built on first author search: ~1M names is costly up front
+let detailsError = null;
+let searchTimer;
+let restoringUrl = false;
+let saved = loadSaved();
+let panelView = "home";
+
+// ---------- storage (every access wrapped: private windows can throw) ----------
+function loadSaved() {
+  try { return JSON.parse(localStorage.getItem(SAVED_KEY)) || []; } catch (e) { return []; }
+}
+function storeSaved() {
+  try { localStorage.setItem(SAVED_KEY, JSON.stringify(saved)); } catch (e) { /* ignore */ }
+  $("saved-n").textContent = saved.length;
+}
+function canonicalPaperId(id) {
+  return D.aliases?.[id] || id;
+}
+function migrateSavedIds() {
+  saved = [...new Set(saved.map(canonicalPaperId))];
+  storeSaved();
+}
+
+// ---------- theme ----------
+function currentTheme() {
+  return document.documentElement.dataset.theme;
+}
+function initTheme() {
+  let t = null;
+  try { t = localStorage.getItem("@@STORAGE_PREFIX@@:theme"); } catch (e) { /* ignore */ }
+  if (!t) t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+}
+function cssVar(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+function toggleTheme() {
+  const t = currentTheme() === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("@@STORAGE_PREFIX@@:theme", t); } catch (e) { /* ignore */ }
+  if (D) {
+    recolor(); relayoutTheme(); updateLabels();
+    if (panelView === "home") showHome();
+  }
+}
+
+// ---------- colors ----------
+// Golden-angle hue rotation: distinct colors for an arbitrary category count.
+function hue(i) {
+  const light = currentTheme() === "light";
+  return "hsl(" + ((i * 137.508) % 360).toFixed(1) + "," + (light ? "65%,42%" : "65%,60%") + ")";
+}
+// Points take their topic's colour; subtopics share their parent topic's colour.
+function computeStyle() {
+  const table = Object.keys(D.topics).map(t => hue(+t));
+  colors = D.t.map(t => table[t]);
+  sizes = new Array(D.x.length).fill(3);
+}
+
+function recolor() {
+  computeStyle();
+  Plotly.restyle(plotEl, { "marker.color": [colors], "marker.size": [sizes] }, [0]);
+  refreshHighlight();
+}
+
+function matchesCategories(i) {
+  return (!selectedPeriods.size || selectedPeriods.has(D.periods[D.per[i]])) &&
+    (!selectedTypes.size || selectedTypes.has(D.types[D.typ[i]]));
+}
+function filtersActive() { return selectedPeriods.size > 0 || selectedTypes.size > 0; }
+// Only offer values that some paper has.
+function usedValues(table, idx) {
+  const n = new Array(table.length).fill(0);
+  idx.forEach(v => n[v]++);
+  return table.filter((_, k) => n[k] > 0);
+}
+function renderFilters() {
+  const row = (id, label, values, selection, emptyLabel = "None") => {
+    const button = (text, value) => {
+      const b = el("button", { type: "button", textContent: text });
+      b.setAttribute("aria-pressed", String(value === null ? !selection.size : selection.has(value)));
+      b.addEventListener("click", () => {
+        if (value === null) selection.clear();
+        else if (selection.has(value)) selection.delete(value);
+        else selection.add(value);
+        filtersChanged();
+      });
+      return b;
+    };
+    $(id).replaceChildren(el("span", {}, label), button("All", null),
+      ...values.map(value => button(value || emptyLabel, value)));
+  };
+  row("period-filters", "Published", usedValues(D.periods, D.per), selectedPeriods);
+  row("type-filters", "Study type", usedValues(D.types, D.typ), selectedTypes);
+  $("clear-filters").disabled = !filtersActive();
+}
+function filtersChanged() {
+  renderFilters();
+  refreshHighlight();
+  if (panelView === "authors") showAuthorResults();
+  syncUrl();
+}
+
+// ---------- plot ----------
+function baseLayout() {
+  const text = cssVar("--text"), bg = cssVar("--bg");
+  return {
+    margin: { l: 10, r: 10, b: 10, t: 10 },
+    paper_bgcolor: bg, plot_bgcolor: bg, font: { color: text },
+    xaxis: { showgrid: false, zeroline: false, showticklabels: false },
+    // scaleanchor keeps the map's true aspect ratio: distance means the same on both axes.
+    yaxis: { showgrid: false, zeroline: false, showticklabels: false, scaleanchor: "x" },
+    showlegend: false, dragmode: "pan", hovermode: "closest", annotations: [],
+  };
+}
+function relayoutTheme() {
+  const bg = cssVar("--bg");
+  Plotly.relayout(plotEl, { paper_bgcolor: bg, plot_bgcolor: bg, "font.color": cssVar("--text") });
+  Plotly.restyle(plotEl, { "marker.color": cssVar("--text") }, [1]);
+}
+
+function initPlot() {
+  const mainTrace = {
+    type: "scattergl", mode: "markers",
+    x: D.x, y: D.y, text: D.title,
+    marker: { size: sizes, color: colors, opacity: 1 },
+    selected: { marker: { opacity: 1 } },
+    unselected: { marker: { opacity: 0.07 } },
+    hovertemplate: "<b>%{text}</b><extra></extra>",
+  };
+  // Second trace: a ring around the selected paper.
+  const ring = {
+    type: "scattergl", mode: "markers", x: [], y: [], hoverinfo: "skip",
+    marker: { symbol: "circle-open", size: 18, line: { width: 2.5 }, color: cssVar("--text") },
+  };
+  return Plotly.newPlot(plotEl, [mainTrace, ring], baseLayout(), {
+    responsive: true, displaylogo: false, scrollZoom: true,
+    modeBarButtonsToRemove: ["select2d", "lasso2d", "toggleSpikelines"],
+  }).then(() => {
+    plotEl.on("plotly_click", e => { const p = e.points.find(p => p.curveNumber === 0); if (p) selectPaper(p.pointIndex); });
+    plotEl.on("plotly_relayout", e => {
+      // Ignore the event our own annotation update triggers.
+      if (Object.keys(e).some(k => k.startsWith("xaxis") || k.startsWith("yaxis"))) scheduleLabels();
+    });
+    updateLabels();
+  });
+}
+
+// Names on the map: topic names when zoomed out, subtopic names once zoomed in;
+// the largest groups in the viewport, more as you zoom in.
+let labelTimer = null;
+let fullWidth = null;    // x-range width of the initial (fully zoomed-out) view
+function scheduleLabels() { clearTimeout(labelTimer); labelTimer = setTimeout(updateLabels, 120); }
+function updateLabels() {
+  const fl = plotEl._fullLayout;
+  if (!fl) return;
+  const [x0, x1] = fl.xaxis.range, [y0, y1] = fl.yaxis.range;
+  if (fullWidth === null || x1 - x0 > fullWidth) fullWidth = x1 - x0;
+  const groups = (x1 - x0) > 0.45 * fullWidth ? D.topics : D.clusters;
+  const color = cssVar("--text"), bg = cssVar("--bg");
+  // Greedy placement, largest first: skip a name whose box would overlap one already placed.
+  const px = fl.xaxis._length / (x1 - x0), py = fl.yaxis._length / (y1 - y0);
+  const boxes = [];
+  const fits = c => {
+    const w = c.name.length * 6.4 + 8, h = 18, cx = c.cx * px, cy = c.cy * py;
+    const b = [cx - w / 2, cx + w / 2, cy - h / 2, cy + h / 2];
+    if (boxes.some(o => b[0] < o[1] && o[0] < b[1] && b[2] < o[3] && o[2] < b[3])) return false;
+    boxes.push(b);
+    return true;
+  };
+  const anns = Object.entries(groups)
+    .filter(([id, c]) => id !== "-1" && c.cx >= x0 && c.cx <= x1 && c.cy >= y0 && c.cy <= y1)
+    .sort((a, b) => b[1].n - a[1].n)
+    .filter(([, c]) => fits(c))
+    .slice(0, Math.max(8, Math.min(MAX_LABELS, Math.round(fl.width / 28))))
+    .map(([id, c]) => ({
+      x: c.cx, y: c.cy, xref: "x", yref: "y", showarrow: false,
+      text: c.name.split(" · ").slice(0, 2).join(" · "),
+      font: { size: 11, color }, bgcolor: bg, opacity: 0.8, borderpad: 2,
+    }));
+  Plotly.relayout(plotEl, { annotations: anns });
+}
+
+// Zoom so the box fills the view; Plotly widens the other axis to keep the aspect ratio.
+function zoomTo(xs, ys) {
+  const pad = 0.12;
+  const [x0, x1] = [Math.min(...xs), Math.max(...xs)], [y0, y1] = [Math.min(...ys), Math.max(...ys)];
+  const dx = (x1 - x0 || 1) * pad, dy = (y1 - y0 || 1) * pad;
+  Plotly.relayout(plotEl, {
+    "xaxis.range": [x0 - dx, x1 + dx], "yaxis.range": [y0 - dy, y1 + dy],
+  });
+}
+// Re-center on a point without changing the zoom level.
+function panTo(i) {
+  const fl = plotEl._fullLayout;
+  const [x0, x1] = fl.xaxis.range, [y0, y1] = fl.yaxis.range;
+  const hw = (x1 - x0) / 2, hh = (y1 - y0) / 2;
+  Plotly.relayout(plotEl, {
+    "xaxis.range": [D.x[i] - hw, D.x[i] + hw], "yaxis.range": [D.y[i] - hh, D.y[i] + hh],
+  });
+}
+
+// ---------- highlighting: search matches, browsed cluster ----------
+let matchSet = null;   // Set of paper indices matching the query, or null
+function inActiveGroup(i) {
+  return (activeCluster === null || D.c[i] === activeCluster) && (activeTopic === null || D.t[i] === activeTopic);
+}
+function refreshHighlight() {
+  let idx = null;
+  const grouped = activeCluster !== null || activeTopic !== null;
+  if (matchSet && grouped) idx = [...matchSet].filter(inActiveGroup);
+  else if (matchSet) idx = [...matchSet];
+  else if (activeCluster !== null) idx = clusterMembers(activeCluster);
+  else if (activeTopic !== null) idx = topicMembers(activeTopic);
+  if (filtersActive()) {
+    idx = (idx === null ? D.x.map((_, i) => i) : idx).filter(matchesCategories);
+  }
+  $("filter-count").textContent = idx === null ? "All papers visible" : idx.length.toLocaleString() + " of " + D.x.length.toLocaleString() + " papers highlighted";
+  // With 250k points, enlarging every highlighted point buries the map; only enlarge small sets.
+  const highlighted = new Set(idx && idx.length <= 5000 ? idx : []);
+  const enlarge = (matchSet !== null || activeCluster !== null) && highlighted.size > 0;
+  Plotly.restyle(plotEl, {
+    selectedpoints: [idx],
+    "marker.size": [enlarge ? sizes.map((size, i) => highlighted.has(i) ? 7 : size) : sizes],
+    "marker.line.width": [enlarge ? sizes.map((_, i) => highlighted.has(i) ? 1 : 0) : 0],
+    "marker.line.color": cssVar("--text"),
+  }, [0]);
+}
+function clusterMembers(cid) {
+  const out = [];
+  for (let i = 0; i < D.c.length; i++) if (D.c[i] === cid) out.push(i);
+  return out;
+}
+function topicMembers(tid) {
+  const out = [];
+  for (let i = 0; i < D.t.length; i++) if (D.t[i] === tid) out.push(i);
+  return out;
+}
+
+function applySearch(q) {
+  query = q.trim();
+  if (searchScope === "authors") {
+    activeCluster = activeTopic = null;
+    if (!X) {
+      matchSet = null;
+      hits.textContent = detailsError ? "Author metadata unavailable" : "Loading authors…";
+    } else {
+      const draft = normalizeAuthor(query);
+      const names = selectedAuthors.length ? selectedAuthors : draft.length < 2 ? [] : [...ensureAuthorIndex().entries()]
+        .filter(([, entry]) => authorEntryMatches(entry, draft)).map(([key]) => key);
+      matchSet = selectedAuthors.length || query ? authorMatches(names) : null;
+      hits.textContent = matchSet === null ? "" : matchSet.size + " matching paper" + (matchSet.size === 1 ? "" : "s");
+    }
+    refreshHighlight();
+    if (panelView !== "paper" && panelView !== "saved") showAuthorResults();
+    syncUrl();
+    return;
+  }
+  const lq = query.toLowerCase();
+  if (!lq) {
+    matchSet = null; hits.textContent = "";
+  } else {
+    matchSet = new Set();
+    haystack.forEach((h, i) => { if (h.includes(lq)) matchSet.add(i); });
+    hits.textContent = matchSet.size + " match" + (matchSet.size === 1 ? "" : "es") + (X ? "" : " (titles only)");
+  }
+  refreshHighlight();
+  syncUrl();
+}
+function setQuery(q) {
+  clearTimeout(searchTimer);
+  if (searchScope === "authors") {
+    exitAuthorMode();
+    clearPaperRing();
+    showHome();
+  }
+  search.value = q;
+  applySearch(q);
+}
+
+// ---------- panel ----------
+function el(tag, props, ...kids) {
+  const e = document.createElement(tag);
+  Object.assign(e, props || {});
+  e.append(...kids.filter(k => k !== null && k !== undefined));
+  return e;
+}
+function setPanel(...nodes) { panel.replaceChildren(...nodes); panel.scrollTop = 0; }
+
+function paperRow(i, extra) {
+  const li = el("li", { tabIndex: 0 },
+    el("span", {}, D.title[i], extra ? el("span", { className: "sub" }, extra) : null));
+  const go = () => { selectPaper(i); panTo(i); };
+  li.addEventListener("click", go);
+  li.addEventListener("keydown", e => { if (e.key === "Enter") go(); });
+  return li;
+}
+
+function normalizeAuthor(name) {
+  return name.normalize("NFC").trim().replace(/\s+/g, " ").toLowerCase();
+}
+function splitAuthors(value) {
+  return value.split(",").map(name => name.trim()).filter(Boolean);
+}
+function paperAuthors(i) {
+  // PubMed gives an affiliation per author; only the first author's is published here.
+  return splitAuthors(X.authors[i]).filter(name => name !== "et al.")
+    .map((name, k) => ({id: null, name, institution: k === 0 ? X.aff[i] : ""}));
+}
+function authorKey(author) {
+  return author.id || "name:" + normalizeAuthor(author.name);
+}
+function ensureAuthorIndex() {
+  if (!authorIndex && X) buildAuthorIndex();
+  return authorIndex || new Map();
+}
+function buildAuthorIndex() {
+  authorIndex = new Map();
+  X.authors.forEach((_, i) => paperAuthors(i).forEach(author => {
+    const key = authorKey(author);
+    if (!authorIndex.has(key)) authorIndex.set(key, { name: author.name, authorId: author.id || "", institutions: new Set(), papers: new Set() });
+    const entry = authorIndex.get(key);
+    if (author.institution) entry.institutions.add(author.institution);
+    entry.papers.add(i);
+  }));
+}
+// Every searchable field shown for an author: name, affiliations, NeurIPS id.
+function authorSearchText(author) {
+  return [author.name, author.institution, author.id ? author.id.replace(/^neurips:/, "") : ""]
+    .filter(Boolean).join(" ").toLowerCase();
+}
+// An author matches the query on any of their fields, not just their name.
+function authorEntryMatches(entry, query) {
+  if (!query) return true;
+  const id = entry.authorId ? entry.authorId.replace(/^neurips:/, "").toLowerCase() : "";
+  return normalizeAuthor(entry.name).includes(query) || (!!id && id.includes(query)) ||
+    [...entry.institutions].some(value => normalizeAuthor(value).includes(query));
+}
+function authorMatches(names) {
+  const result = new Set();
+  uniqueAuthors(names).forEach(key => ensureAuthorIndex().get(key)?.papers.forEach(i => result.add(i)));
+  return result;
+}
+function uniqueAuthors(names) {
+  const found = new Map();
+  names.forEach(name => {
+    if (/^neurips:[1-9]\d*$/.test(name) || name.startsWith("name:")) {
+      found.set(name, name);
+      return;
+    }
+    const normalized = normalizeAuthor(name);
+    if (!normalized) return;
+    if (!X) { found.set(normalized, name.trim()); return; }
+    const matches = [...ensureAuthorIndex().entries()].filter(([, entry]) => normalizeAuthor(entry.name) === normalized);
+    if (matches.length) matches.forEach(([key]) => found.set(key, key));
+    else found.set("name:" + normalized, "name:" + normalized);
+  });
+  return [...found.values()];
+}
+// PubMed has no author identifiers here, so authors are grouped by exact name.
+function authorLabel(key) {
+  const entry = ensureAuthorIndex().get(key);
+  return entry ? entry.name : key.replace(/^name:/, "");
+}
+function clearPaperRing() {
+  selectedPaper = -1;
+  Plotly.restyle(plotEl, { x: [[]], y: [[]] }, [1]);
+}
+function exitAuthorMode() {
+  clearTimeout(searchTimer);
+  searchScope = "all";
+  $("search-scope").value = "all";
+  selectedAuthors = [];
+  query = search.value = "";
+  matchSet = null;
+  hits.textContent = "";
+}
+function setSearchScope(scope) {
+  clearTimeout(searchTimer);
+  if (scope === "authors") {
+    searchScope = scope;
+    $("search-scope").value = scope;
+    activeCluster = activeTopic = null;
+    clearPaperRing();
+    panelView = "authors";
+  } else {
+    exitAuthorMode();
+    clearPaperRing();
+    showHome();
+  }
+  applySearch(search.value);
+}
+function selectAuthor(name) {
+  selectedAuthors = uniqueAuthors([name]);
+  search.value = "";
+  setSearchScope("authors");
+}
+function addAuthor(name) {
+  selectedAuthors = uniqueAuthors([...selectedAuthors, name]);
+  search.value = "";
+  setSearchScope("authors");
+}
+function removeAuthor(name) {
+  const keys = new Set(uniqueAuthors([name]));
+  selectedAuthors = selectedAuthors.filter(n => !keys.has(n));
+  setSearchScope("authors");
+}
+function returnToAuthorResults() {
+  clearPaperRing();
+  panelView = "authors";
+  applySearch(query);
+}
+function showAuthorResults() {
+  panelView = "authors";
+  const selected = el("div", { className: "authors" });
+  selectedAuthors.forEach(key => {
+    const b = el("button", { type: "button", textContent: authorLabel(key) + " ×", ariaLabel: "Remove " + authorLabel(key) });
+    b.addEventListener("click", () => removeAuthor(key));
+    selected.append(b);
+  });
+  const nodes = [el("h2", {}, "Author results"), selected];
+  if (!X) {
+    nodes.push(el("p", { className: "hint" }, detailsError ? "Unable to load author metadata: " + detailsError.message : "Loading author metadata…"));
+    setPanel(...nodes);
+    return;
+  }
+  const draft = normalizeAuthor(query);
+  const selectedKeys = new Set(selectedAuthors);
+  // Hundreds of thousands of names: wait for two letters before suggesting.
+  const suggestions = draft.length < 2 ? [] : [...ensureAuthorIndex().entries()]
+    .filter(([key, entry]) => !selectedKeys.has(key) && authorEntryMatches(entry, draft))
+    .sort(([, a], [, b]) => b.papers.size - a.papers.size || a.name.localeCompare(b.name));
+  const choices = el("ul", { className: "list author-suggestions" });
+  suggestions.slice(0, 20).forEach(([key, entry]) => {
+    const b = el("button", { type: "button", textContent: authorLabel(key) + " (" + entry.papers.size + ")", ariaLabel: "Add " + (key.startsWith("name:") ? entry.name : authorLabel(key)) });
+    b.addEventListener("click", () => addAuthor(key));
+    choices.append(el("li", {}, b));
+  });
+  nodes.push(el("h3", {}, "Add authors"), choices);
+  if (suggestions.length > 20) nodes.push(el("p", { className: "hint" }, "First 20 suggestions shown. Refine the search to find more authors."));
+  const idx = [...(matchSet || [])].filter(matchesCategories);
+  const fit = el("button", { type: "button", textContent: "Fit matching papers", disabled: !idx.length });
+  fit.addEventListener("click", () => { if (idx.length) zoomTo(idx.map(i => D.x[i]), idx.map(i => D.y[i])); });
+  nodes.push(el("h3", {}, matchSet === null ? "Search authors to highlight their papers" : idx.length + " matching paper" + (idx.length === 1 ? "" : "s")), fit);
+  if (matchSet !== null) {
+    const counts = new Map();
+    idx.forEach(i => counts.set(D.c[i], (counts.get(D.c[i]) || 0) + 1));
+    const topics = el("ul", { className: "list" });
+    [...counts].sort((a,b) => b[1]-a[1]).forEach(([cid,n]) => topics.append(el("li", { style: "cursor:default" }, (cid === -1 ? "unclustered" : D.clusters[cid].name) + ": " + n)));
+    const list = el("ul", { className: "list" });
+    idx.slice(0,300).forEach(i => list.append(paperRow(i)));
+    nodes.push(topics, list);
+    if (!idx.length) nodes.push(el("p", { className: "hint" }, "No matching papers."));
+    if (idx.length > 300) nodes.push(el("p", { className: "hint" }, "First 300 matching papers listed; counts and map include all matches."));
+  }
+  setPanel(...nodes);
+}
+
+function groupRow(dotColor, name, n, go) {
+  const li = el("li", { tabIndex: 0 }, el("i", { className: "dot", style: "background:" + dotColor }), name,
+    el("span", { className: "n" }, n.toLocaleString()));
+  li.addEventListener("click", go);
+  li.addEventListener("keydown", e => { if (e.key === "Enter") go(); });
+  return li;
+}
+// Newest papers first in topic lists: the list is capped, and recent work is usually wanted.
+function newestFirst(idx) { return idx.slice().sort((a, b) => D.yr[b] - D.yr[a]); }
+
+function showHome() {
+  panelView = "home";
+  const intro = el("p", { className: "hint" },
+    "A 2D semantic map of " + D.x.length.toLocaleString() + " PubMed papers (2000–@@YEAR@@) on patient safety, medical error, " +
+    "adverse events and quality of care. Nearby points are papers with similar content. " +
+    "Click a point for details, scroll to zoom, drag to pan. Press / to search.");
+  const list = el("ul", { className: "list" });
+  const ids = Object.keys(D.topics).sort((a, b) => D.topics[b].n - D.topics[a].n);
+  ids.forEach(id => list.append(groupRow(hue(+id), D.topics[id].name, D.topics[id].n, () => selectTopic(+id))));
+  setPanel(intro, el("h3", {}, ids.length + " topics, largest first"), list);
+}
+
+function selectTopic(tid) {
+  if (searchScope === "authors") { exitAuthorMode(); clearPaperRing(); }
+  panelView = "topic";
+  activeTopic = tid; activeCluster = null;
+  refreshHighlight();
+  const members = topicMembers(tid);
+  zoomTo(members.map(i => D.x[i]), members.map(i => D.y[i]));
+  const subs = el("ul", { className: "list" });
+  Object.entries(D.clusters).filter(([, c]) => c.parent === tid).sort((a, b) => b[1].n - a[1].n)
+    .forEach(([id, c]) => subs.append(groupRow(hue(tid), c.name, c.n, () => selectCluster(+id))));
+  const list = el("ul", { className: "list" });
+  newestFirst(members.filter(matchesCategories)).slice(0, 200).forEach(i => list.append(paperRow(i, yearJournal(i))));
+  const back = el("button", { className: "link", textContent: "← All topics" });
+  back.addEventListener("click", clearSelection);
+  setPanel(
+    el("div", { className: "row" }, back),
+    el("h2", {}, D.topics[tid].name),
+    el("p", { className: "hint" }, members.length.toLocaleString() + " papers"),
+    el("h3", {}, "Subtopics"), subs,
+    el("h3", {}, "Newest papers"), list);
+  syncUrl();
+}
+
+function selectCluster(cid) {
+  if (searchScope === "authors") { exitAuthorMode(); clearPaperRing(); }
+  panelView = "cluster";
+  activeCluster = cid; activeTopic = null;
+  refreshHighlight();
+  const members = clusterMembers(cid);
+  zoomTo(members.map(i => D.x[i]), members.map(i => D.y[i]));
+  const shown = newestFirst(members.filter(matchesCategories));
+  const list = el("ul", { className: "list" });
+  shown.slice(0, 300).forEach(i => list.append(paperRow(i, yearJournal(i))));
+  const parent = D.clusters[cid].parent;
+  const back = el("button", { className: "link", textContent: "← " + D.topics[parent].name });
+  back.addEventListener("click", () => selectTopic(parent));
+  setPanel(
+    el("div", { className: "row" }, back),
+    el("h2", {}, D.clusters[cid].name),
+    el("p", { className: "hint" }, members.length.toLocaleString() + " papers" + (shown.length > 300 ? " (newest 300 listed)" : "")),
+    list);
+  syncUrl();
+}
+function yearJournal(i) { return (D.yr[i] || "") + " · " + D.journals[D.jr[i]]; }
+
+function clearSelection() {
+  if (searchScope === "authors") exitAuthorMode();
+  activeCluster = activeTopic = null; selectedPaper = -1;
+  Plotly.restyle(plotEl, { x: [[]], y: [[]] }, [1]);
+  refreshHighlight();
+  Plotly.relayout(plotEl, { "xaxis.autorange": true, "yaxis.autorange": true });
+  showHome();
+  syncUrl();
+}
+
+function selectPaper(i) {
+  selectedPaper = i;
+  panelView = "paper";
+  Plotly.restyle(plotEl, { x: [[D.x[i]]], y: [[D.y[i]]] }, [1]);
+  renderPaper();
+  syncUrl();
+}
+
+function renderPaper() {
+  const i = selectedPaper;
+  const isSaved = saved.includes(D.id[i]);
+  const badges = el("div", { className: "badges" },
+    D.yr[i] ? el("span", { className: "badge" }, String(D.yr[i])) : null,
+    el("span", { className: "badge" }, D.types[D.typ[i]]),
+    el("span", { className: "badge" }, D.topics[D.t[i]].name + " › " + D.clusters[D.c[i]].name));
+
+  // Abstracts are not republished here; PubMed has them.
+  const actions = el("div", { className: "actions" },
+    el("a", { className: "primary", href: pubmedUrl(i), target: "_blank", rel: "noopener", textContent: "PubMed (abstract)" }));
+  if (X && X.doi[i]) actions.append(el("a", { href: "https://doi.org/" + X.doi[i], target: "_blank", rel: "noopener", textContent: "DOI" }));
+  const star = el("button", { textContent: isSaved ? "★ Saved" : "☆ Save" });
+  star.addEventListener("click", () => toggleSaved(i));
+  const share = el("button", { textContent: "Copy link" });
+  share.addEventListener("click", () => {
+    const done = () => { share.textContent = "Copied"; setTimeout(() => share.textContent = "Copy link", 1500); };
+    navigator.clipboard ? navigator.clipboard.writeText(location.href).then(done, () => {}) : null;
+  });
+  actions.append(star, share);
+
+  const nodes = [
+    el("h2", {}, D.title[i]),
+    el("p", { className: "hint" }, D.journals[D.jr[i]]), badges,
+  ];
+  if (X) {
+    const authors = el("div", { className: "authors" });
+    paperAuthors(i).forEach(author => {
+      const key = authorKey(author);
+      const b = el("button", { type: "button", textContent: author.name, ariaLabel: "Show papers by " + author.name });
+      b.addEventListener("click", () => selectAuthor(key));
+      authors.append(b);
+    });
+    nodes.push(authors);
+    if (X.aff[i]) nodes.push(el("p", { className: "hint" }, "First author: " + X.aff[i]));
+    nodes.push(actions);
+    if (X.mesh[i].length) {
+      const chips = el("div", { className: "chips" });
+      X.mesh[i].forEach(k => {
+        const b = el("button", { textContent: X.mesh_table[k] });
+        b.addEventListener("click", () => setQuery(X.mesh_table[k]));
+        chips.append(b);
+      });
+      nodes.push(el("h3", {}, "Major MeSH topics"), chips);
+    }
+  } else {
+    nodes.push(actions, el("p", { className: "hint" }, detailsError ? "Unable to load authors: " + detailsError.message : "Loading authors…"));
+  }
+  const sim = el("ul", { className: "list" });
+  if (X) X.nn[i].forEach(j => sim.append(paperRow(j, yearJournal(j))));
+  else sim.append(el("li", { className: "hint", style: "cursor:default" }, "Loading…"));
+  const back = el("button", { className: "link", textContent: activeCluster !== null || activeTopic !== null ? "← Back to topic" : "← All topics" });
+  if (searchScope === "authors") {
+    back.textContent = "← Back to author results";
+    back.addEventListener("click", returnToAuthorResults);
+  } else back.addEventListener("click", () => activeCluster !== null ? selectCluster(activeCluster)
+    : activeTopic !== null ? selectTopic(activeTopic) : clearSelection());
+  setPanel(el("div", { className: "row" }, back), ...nodes, el("h3", {}, "Similar papers"), sim);
+}
+
+function pubmedUrl(i) { return "https://pubmed.ncbi.nlm.nih.gov/" + D.id[i] + "/"; }
+
+function toggleSaved(i) {
+  const id = D.id[i], k = saved.indexOf(id);
+  if (k >= 0) saved.splice(k, 1); else saved.push(id);
+  storeSaved();
+  if (panelView === "paper") { const top = panel.scrollTop; renderPaper(); panel.scrollTop = top; }
+  if (panelView === "saved") showSaved();
+}
+
+function showSaved() {
+  panelView = "saved";
+  const byId = new Map(D.id.map((id, i) => [id, i]));
+  const idx = saved.map(id => byId.get(id)).filter(i => i !== undefined);
+  const list = el("ul", { className: "list" });
+  idx.forEach(i => {
+    const li = paperRow(i);
+    const rm = el("button", { className: "link", textContent: "remove", title: "Remove from saved" });
+    rm.addEventListener("click", e => { e.stopPropagation(); toggleSaved(i); });
+    li.append(rm);
+    list.append(li);
+  });
+  const actions = el("div", { className: "actions" });
+  if (idx.length) {
+    const csv = el("button", { textContent: "Download CSV", disabled: !X });
+    csv.addEventListener("click", () => downloadCsv(idx));
+    const md = el("button", { textContent: "Copy as Markdown", disabled: !X });
+    md.addEventListener("click", () => navigator.clipboard && navigator.clipboard.writeText(
+      idx.map(i => "- [" + D.title[i] + "](" + pubmedUrl(i) + ")").join("\n")));
+    actions.append(csv, md);
+  }
+  const back = el("button", { className: "link", textContent: "← All topics" });
+  back.addEventListener("click", clearSelection);
+  setPanel(el("div", { className: "row" }, back), el("h2", {}, "Saved papers (" + idx.length + ")"),
+    idx.length ? actions : el("p", { className: "hint" }, "Nothing saved yet. Open a paper and press Save. Saved papers stay in this browser only."),
+    list);
+}
+
+function downloadCsv(idx) {
+  const q = s => '"' + String(s).replace(/"/g, '""') + '"';
+  const rows = [["pmid", "title", "authors", "journal", "year", "doi", "pubmed"].join(",")]
+    .concat(idx.map(i => [D.id[i], D.title[i], X.authors[i], D.journals[D.jr[i]], D.yr[i], X.doi[i], pubmedUrl(i)].map(q).join(",")));
+  const a = el("a", { href: URL.createObjectURL(new Blob([rows.join("\n")], { type: "text/csv" })), download: "@@CSV_NAME@@" });
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// ---------- URL state ----------
+function syncUrl() {
+  if (restoringUrl) return;
+  const u = new URL(location);
+  const set = (k, v) => v ? u.searchParams.set(k, v) : u.searchParams.delete(k);
+  set("scope", searchScope === "authors" ? "authors" : "");
+  u.searchParams.delete("author");
+  u.searchParams.delete("author-id");
+  if (searchScope === "authors") selectedAuthors.forEach(key => u.searchParams.append(/^neurips:|^name:/.test(key) ? "author-id" : "author", key));
+  set("q", query);
+  set("p", selectedPaper >= 0 ? D.id[selectedPaper] : "");
+  set("c", activeCluster !== null && selectedPaper < 0 ? String(activeCluster) : "");
+  set("t", activeTopic !== null && selectedPaper < 0 ? String(activeTopic) : "");
+  for (const [key, selection] of [["period", selectedPeriods], ["type", selectedTypes]]) {
+    u.searchParams.delete(key);
+    selection.forEach(value => u.searchParams.append(key, value));
+  }
+  history.replaceState(null, "", u);
+}
+
+// ---------- boot ----------
+function wire() {
+  search.addEventListener("input", () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      if (searchScope === "authors") { clearPaperRing(); panelView = "authors"; }
+      applySearch(search.value);
+    }, 150);
+  });
+  $("search-scope").addEventListener("change", () => setSearchScope($("search-scope").value));
+  $("clear-filters").addEventListener("click", () => {
+    selectedPeriods.clear(); selectedTypes.clear(); filtersChanged();
+  });
+  $("btn-topics").addEventListener("click", clearSelection);
+  $("btn-saved").addEventListener("click", showSaved);
+  $("btn-theme").addEventListener("click", toggleTheme);
+  document.addEventListener("keydown", e => {
+    const typing = /^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName);
+    if (e.key === "/" && !typing) { e.preventDefault(); search.focus(); search.select(); }
+    else if (e.key === "Escape") {
+      if (searchScope === "authors") {
+        clearTimeout(searchTimer);
+        if (selectedPaper >= 0 || panelView === "saved") returnToAuthorResults();
+        else if (search.value || query) { search.value = ""; applySearch(""); }
+        else if (selectedAuthors.length) { selectedAuthors = []; applySearch(""); }
+        else clearSelection();
+      } else if (document.activeElement === search && search.value) setQuery("");
+      else if (selectedPaper >= 0 || activeCluster !== null || activeTopic !== null) clearSelection();
+      search.blur();
+    }
+  });
+}
+
+function buildHaystack() {
+  haystack = D.title.map((t, i) => {
+    const base = t + " " + D.journals[D.jr[i]];
+    if (!X) return base.toLowerCase();
+    return (base + " " + X.authors[i] + " " + X.aff[i] + " "
+      + X.mesh[i].map(k => X.mesh_table[k]).join(" ")).toLowerCase();
+  });
+}
+
+function restoreUrl(params) {
+  restoringUrl = true;
+  selectedPeriods.clear(); selectedTypes.clear();
+  params.getAll("period").filter(value => D.periods.includes(value)).forEach(value => selectedPeriods.add(value));
+  params.getAll("type").filter(value => D.types.includes(value)).forEach(value => selectedTypes.add(value));
+  renderFilters();
+  exitAuthorMode();
+  activeCluster = activeTopic = null;
+  clearPaperRing();
+  panelView = "home";
+  const authors = [...params.getAll("author-id"), ...params.getAll("author")];
+  if (params.get("scope") === "authors" || authors.length) {
+    selectedAuthors = uniqueAuthors(authors);
+    search.value = params.get("q") || "";
+    setSearchScope("authors");
+  } else setQuery(params.get("q") || "");
+  const p = params.get("p"), c = params.get("c"), t = params.get("t");
+  const pi = p ? D.id.indexOf(canonicalPaperId(p)) : -1;
+  if (pi >= 0) { selectPaper(pi); if (searchScope !== "authors") panTo(pi); }
+  else if (searchScope !== "authors" && c !== null && D.clusters[c]) selectCluster(+c);
+  else if (searchScope !== "authors" && t !== null && D.topics[t]) selectTopic(+t);
+  restoringUrl = false;
+  syncUrl();
+}
+function detailsLoaded(details) {
+  X = details;
+  detailsError = null;
+  buildHaystack();
+  selectedAuthors = uniqueAuthors(selectedAuthors);
+  applySearch(query);
+  if (panelView === "paper") renderPaper();
+  else if (panelView === "saved") showSaved();
+}
+function detailsFailed(err) {
+  detailsError = err;
+  if (searchScope === "authors") applySearch(query);
+  else hits.textContent = "abstracts failed to load: " + err;
+  if (panelView === "paper") renderPaper();
+}
+
+async function fetchJson(path) {
+  if (location.protocol === "file:") {
+    throw new Error("Serve the site with python -m http.server --directory site 8000, then open http://localhost:8000/. Browsers block loading paper data from a local file.");
+  }
+  const response = await fetch(path);
+  if (!response.ok) throw new Error(path + ": HTTP " + response.status);
+  return response.json();
+}
+
+initTheme();
+storeSaved();
+fetchJson("data.json").then(async data => {
+  D = data;
+  migrateSavedIds();
+  const params = new URLSearchParams(location.search);
+  computeStyle();
+  renderFilters();
+  buildHaystack();
+  await initPlot();
+  wire();
+  search.disabled = false;
+  showHome();
+
+  restoreUrl(params);
+
+  // Author requests remain live state while the larger details payload loads.
+  // Details come in two files to keep each under GitHub's 50 MB warning size.
+  Promise.all([fetchJson("details-people.json"), fetchJson("details-topics.json")])
+    .then(([people, topics]) => detailsLoaded({ ...people, ...topics })).catch(detailsFailed);
+}).catch(err => {
+  panel.replaceChildren(el("p", { className: "hint" }, "Unable to start the explorer: " + err.message));
+});
+</script>
+</body>
+</html>
