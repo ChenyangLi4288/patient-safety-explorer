@@ -6,6 +6,8 @@ titles and abstracts. Papers are grouped into 30 topics and 200 subtopics.
 
 **Live site: https://chenyangli4288.github.io/patient-safety-explorer/**
 
+![AI in patient-safety and quality-of-care research, 2005–2025](docs/ai_trend.png)
+
 ![Paper view](docs/screenshot.png)
 
 ## Features
