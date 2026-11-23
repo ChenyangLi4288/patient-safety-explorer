@@ -1,10 +1,14 @@
-"""Download the patient-safety + quality-of-care PubMed corpus (has abstract, 2000+).
+"""Download the patient-safety PubMed corpus (has abstract, 2000+).
 
 PubMed esearch returns at most 10k PMIDs per query, so the query is split by
 publication month. Each month is written to data/raw/YYYY-MM.jsonl; months that
-already exist are skipped, so the script is resumable.
+already exist are skipped, so the script is resumable. data/raw/QUERY.txt records the
+query the files came from, and the script refuses to mix files from two queries.
 
-Usage: python fetch_corpus.py [--start 2000] [--end 2026]
+QUERY is the current (v2) query. QUERY_V1 is the query behind the first map; it is kept
+so that map can be reproduced (--query v1, into a separate --out directory).
+
+Usage: python fetch_corpus.py [--start 2000] [--end 2026] [--query v2|v1] [--out data/raw]
 """
 import argparse
 import calendar
@@ -18,10 +22,11 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-from count_corpus import CORE_Q, HAS_ABSTRACT, QUALITY_Q
+from count_corpus import HAS_ABSTRACT, QUERY_TERM, QUERY_V1_TERM
 
 EUTILS = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
-QUERY = f"({CORE_Q} OR {QUALITY_Q}) AND {HAS_ABSTRACT}"
+QUERY = f"({QUERY_TERM}) AND {HAS_ABSTRACT}"  # v2, see count_corpus.py and validate_query.py
+QUERY_V1 = f"({QUERY_V1_TERM}) AND {HAS_ABSTRACT}"  # first map (255,023 papers, Oct 2026)
 OUT = Path(__file__).parent / "data" / "raw"
 BATCH = 400
 MIN_INTERVAL = 0.4  # < 3 req/s without an API key (0.35 drew some 429s)
@@ -178,17 +183,27 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--start", type=int, default=2000)
     ap.add_argument("--end", type=int, default=2026)
+    ap.add_argument("--query", choices=["v2", "v1"], default="v2")
+    ap.add_argument("--out", type=Path, default=OUT)
     args = ap.parse_args()
-    OUT.mkdir(parents=True, exist_ok=True)
+    query = QUERY if args.query == "v2" else QUERY_V1
+    out = args.out
+    out.mkdir(parents=True, exist_ok=True)
+    stamp = out / "QUERY.txt"
+    if stamp.exists() and stamp.read_text(encoding="utf-8") != query:
+        sys.exit(f"{out} holds records from a different query; move them away or pass another --out")
+    if not stamp.exists() and any(out.glob("*.jsonl")):
+        sys.exit(f"{out} holds records from an unknown (probably v1) query; move them away or pass another --out")
+    stamp.write_text(query, encoding="utf-8")
     total = 0
     for y in range(args.start, args.end + 1):
         for m in range(1, 13):
-            path = OUT / f"{y}-{m:02d}.jsonl"
+            path = out / f"{y}-{m:02d}.jsonl"
             if path.exists() and path.with_suffix(".missing").exists():
                 total += sum(1 for _ in path.open(encoding="utf-8"))
                 continue
             last = calendar.monthrange(y, m)[1]
-            term = f'{QUERY} AND ("{y}/{m:02d}/01"[dp] : "{y}/{m:02d}/{last}"[dp])'
+            term = f'{query} AND ("{y}/{m:02d}/01"[dp] : "{y}/{m:02d}/{last}"[dp])'
             pmids = search_pmids(term)
             recs, missing = fetch_records(pmids) if pmids else ([], [])
             path.with_suffix(".missing").write_text("\n".join(missing), encoding="utf-8")

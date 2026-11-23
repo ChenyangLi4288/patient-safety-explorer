@@ -1,0 +1,527 @@
+{
+ "v1_corpus": {
+  "drawn_from": null,
+  "target": "QUERY_V1",
+  "n": 150,
+  "note": "random 150 of the 255,023 papers in the built v1 map (site/data.json)",
+  "drawn": "2026-11-23"
+ },
+ "v1:tiab_quality_of_care": {
+  "drawn_from": "(\"quality of care\"[tiab] OR \"quality improvement\"[tiab] OR \"healthcare quality\"[tiab] OR \"health care quality\"[tiab])",
+  "target": null,
+  "n": 50,
+  "note": "v1 component",
+  "drawn": "2026-11-23"
+ },
+ "v1:mesh_quality_improvement": {
+  "drawn_from": "\"Quality Improvement\"[MeSH]",
+  "target": null,
+  "n": 50,
+  "note": "v1 component",
+  "drawn": "2026-11-23"
+ },
+ "v1:tiab_adverse_event": {
+  "drawn_from": "\"adverse event*\"[tiab] AND (hospital*[tiab] OR inpatient*[tiab] OR \"health care\"[tiab] OR healthcare[tiab])",
+  "target": null,
+  "n": 50,
+  "note": "v1 component",
+  "drawn": "2026-11-23"
+ },
+ "v1:tiab_medical_error": {
+  "drawn_from": "(\"medical error*\"[tiab] OR \"medication error*\"[tiab] OR \"diagnostic error*\"[tiab] OR \"surgical error*\"[tiab])",
+  "target": "tiab_medical_error",
+  "n": 20,
+  "note": "v1 component, kept in v2",
+  "drawn": "2026-11-23"
+ },
+ "v1:tiab_patient_safety": {
+  "drawn_from": "\"patient safety\"[tiab]",
+  "target": null,
+  "n": 20,
+  "note": "v1 component",
+  "drawn": "2026-11-23"
+ },
+ "v1:tiab_never_event": {
+  "drawn_from": "(\"never event*\"[tiab] OR \"sentinel event*\"[tiab] OR \"near miss*\"[tiab] OR \"incident report*\"[tiab] OR \"trigger tool\"[tiab])",
+  "target": null,
+  "n": 20,
+  "note": "v1 component",
+  "drawn": "2026-11-23"
+ },
+ "v1:mesh_iatrogenic": {
+  "drawn_from": "\"Iatrogenic Disease\"[MeSH]",
+  "target": null,
+  "n": 20,
+  "note": "v1 component (explodes to Cross Infection)",
+  "drawn": "2026-11-23"
+ },
+ "cand:mesh_errors_minus_test_accuracy": {
+  "drawn_from": "(\"Medical Errors\"[MeSH:noexp] OR \"Medication Errors\"[MeSH] OR \"Diagnostic Errors\"[MeSH:noexp] OR \"Missed Diagnosis\"[MeSH] OR \"Near Miss, Healthcare\"[MeSH] OR \"Radiotherapy Setup Errors\"[MeSH])",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:mesh_test_accuracy_only": {
+  "drawn_from": "(\"False Positive Reactions\"[MeSH] OR \"False Negative Reactions\"[MeSH] OR \"Observer Variation\"[MeSH]) NOT (\"Medical Errors\"[MeSH:noexp] OR \"Medication Errors\"[MeSH] OR \"Diagnostic Errors\"[MeSH:noexp] OR \"Missed Diagnosis\"[MeSH] OR \"Near Miss, Healthcare\"[MeSH] OR \"Radiotherapy Setup Errors\"[MeSH])",
+  "target": null,
+  "n": 20,
+  "note": "False Positive/Negative Reactions and Observer Variation papers without another error MeSH",
+  "drawn": "2026-11-23"
+ },
+ "cand:mesh_delayed_diagnosis": {
+  "drawn_from": "\"Delayed Diagnosis\"[MeSH]",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:mesh_patient_safety": {
+  "drawn_from": "\"Patient Safety\"[MeSH]",
+  "target": "mesh_patient_safety",
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:mesh_safety_mgmt_care": {
+  "drawn_from": "\"Safety Management\"[MeSH] AND (patient*[tiab] OR (hospital*[tiab] OR inpatient*[tiab] OR hospitali*[tiab] OR \"nursing home*\"[tiab] OR \"long-term care\"[tiab] OR \"intensive care\"[tiab] OR ICU[tiab] OR ward*[tiab] OR \"acute care\"[tiab] OR \"health care\"[tiab] OR healthcare[tiab]))",
+  "target": "mesh_safety_systems",
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:mesh_rca": {
+  "drawn_from": "\"Root Cause Analysis\"[MeSH]",
+  "target": "mesh_safety_systems",
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:mesh_malpractice": {
+  "drawn_from": "\"Malpractice\"[MeSH]",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:mesh_disclosure_err": {
+  "drawn_from": "\"Truth Disclosure\"[MeSH] AND (error*[tiab] OR \"adverse event*\"[tiab] OR harm[tiab] OR mistake*[tiab] OR \"Medical Errors\"[MeSH])",
+  "target": "mesh_safety_systems",
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:mesh_cross_infection_prev": {
+  "drawn_from": "\"Cross Infection/prevention and control\"[MeSH]",
+  "target": "hai_prevention",
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:mesh_falls_care": {
+  "drawn_from": "\"Accidental Falls\"[MeSH] AND (hospital*[tiab] OR inpatient*[tiab] OR hospitali*[tiab] OR \"nursing home*\"[tiab] OR \"long-term care\"[tiab] OR \"intensive care\"[tiab] OR ICU[tiab] OR ward*[tiab] OR \"acute care\"[tiab] OR \"health care\"[tiab] OR healthcare[tiab])",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:mesh_pressure_care": {
+  "drawn_from": "\"Pressure Ulcer\"[MeSH] AND (hospital*[tiab] OR inpatient*[tiab] OR hospitali*[tiab] OR \"nursing home*\"[tiab] OR \"long-term care\"[tiab] OR \"intensive care\"[tiab] OR ICU[tiab] OR ward*[tiab] OR \"acute care\"[tiab] OR \"health care\"[tiab] OR healthcare[tiab])",
+  "target": "pressure_injury_falls",
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:mesh_deterioration_rrt": {
+  "drawn_from": "\"Clinical Deterioration\"[MeSH] OR \"Hospital Rapid Response Team\"[MeSH]",
+  "target": "mesh_handoff_deterioration",
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:mesh_handoff": {
+  "drawn_from": "\"Patient Handoff\"[MeSH]",
+  "target": "mesh_handoff_deterioration",
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:mesh_cpoe_cds_safety": {
+  "drawn_from": "(\"Medical Order Entry Systems\"[MeSH] OR \"Decision Support Systems, Clinical\"[MeSH] OR \"Electronic Prescribing\"[MeSH] OR \"Drug Therapy, Computer-Assisted\"[MeSH] OR \"Medication Systems, Hospital\"[MeSH]) AND ((safety[tiab] OR safe[tiab] OR error*[tiab] OR harm[tiab] OR harms[tiab] OR harmful[tiab] OR adverse[tiab] OR iatrogenic[tiab] OR preventable[tiab] OR \"near miss*\"[tiab] OR mistake*[tiab]) OR alert*[tiab] OR override*[tiab] OR \"Drug-Related Side Effects and Adverse Reactions\"[MeSH] OR \"Drug Interactions\"[MeSH])",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:mesh_adr_majr_care": {
+  "drawn_from": "\"Drug-Related Side Effects and Adverse Reactions\"[Majr] AND ((hospital*[tiab] OR inpatient*[tiab] OR hospitali*[tiab] OR \"nursing home*\"[tiab] OR \"long-term care\"[tiab] OR \"intensive care\"[tiab] OR ICU[tiab] OR ward*[tiab] OR \"acute care\"[tiab] OR \"health care\"[tiab] OR healthcare[tiab]) OR outpatient*[tiab] OR ambulatory[tiab] OR \"primary care\"[tiab] OR prescrib*[tiab] OR preventab*[tiab])",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:mesh_adr_reporting": {
+  "drawn_from": "\"Adverse Drug Reaction Reporting Systems\"[MeSH]",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:mesh_qi_safety_ind": {
+  "drawn_from": "\"Quality Indicators, Health Care\"[MeSH] AND (safety[tiab] OR adverse[tiab] OR harm[tiab] OR complication*[tiab] OR error*[tiab])",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:mesh_patient_id": {
+  "drawn_from": "\"Patient Identification Systems\"[MeSH]",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:mesh_hand_hygiene": {
+  "drawn_from": "\"Hand Hygiene\"[MeSH]",
+  "target": "hai_prevention",
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:tiab_ade": {
+  "drawn_from": "\"adverse drug event*\"[tiab] OR \"preventable adverse\"[tiab] OR \"medication safety\"[tiab] OR \"medication-related harm\"[tiab] OR \"medication related harm\"[tiab]",
+  "target": "tiab_ade",
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:tiab_error_types": {
+  "drawn_from": "\"prescribing error*\"[tiab] OR \"dispensing error*\"[tiab] OR \"administration error*\"[tiab] OR \"dosing error*\"[tiab] OR \"drug error*\"[tiab] OR \"ordering error*\"[tiab] OR \"order error*\"[tiab] OR \"transcription error*\"[tiab] OR \"transfusion error*\"[tiab] OR \"identification error*\"[tiab] OR \"labeling error*\"[tiab] OR \"labelling error*\"[tiab] OR \"laboratory error*\"[tiab] OR \"preanalytical error*\"[tiab] OR \"pre-analytical error*\"[tiab] OR \"wrong-patient\"[tiab] OR \"wrong patient\"[tiab] OR \"wrong-site\"[tiab] OR \"wrong site\"[tiab] OR \"wrong-side\"[tiab] OR \"retract-and-reorder\"[tiab] OR \"look-alike\"[tiab] OR \"sound-alike\"[tiab] OR \"high-alert medication*\"[tiab] OR \"retained surgical\"[tiab] OR \"retained foreign bod*\"[tiab]",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:tiab_alerts": {
+  "drawn_from": "\"alert fatigue\"[tiab] OR \"alarm fatigue\"[tiab] OR \"alert override*\"[tiab] OR \"override rate*\"[tiab] OR \"overridden alert*\"[tiab] OR \"interruptive alert*\"[tiab] OR \"medication alert*\"[tiab] OR \"drug alert*\"[tiab] OR \"drug-drug interaction alert*\"[tiab] OR \"interaction alert*\"[tiab] OR \"allergy alert*\"[tiab] OR \"alarm safety\"[tiab]",
+  "target": "tiab_alerts",
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:tiab_hit_safety": {
+  "drawn_from": "(\"order entry\"[tiab] OR CPOE[tiab] OR \"decision support\"[tiab] OR \"electronic prescribing\"[tiab] OR e-prescribing[tiab] OR \"electronic health record*\"[tiab] OR \"health information technology\"[tiab] OR \"health IT\"[tiab] OR \"smart pump*\"[tiab] OR \"infusion pump*\"[tiab] OR barcode*[tiab] OR \"bar code*\"[tiab] OR \"bar-code*\"[tiab]) AND (error*[tiab] OR \"patient safety\"[tiab] OR \"medication safety\"[tiab] OR \"adverse drug\"[tiab] OR harm[tiab] OR alert*[tiab])",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:tiab_culture_systems": {
+  "drawn_from": "\"safety culture\"[tiab] OR \"safety climate\"[tiab] OR \"culture of safety\"[tiab] OR \"second victim*\"[tiab] OR \"root cause analys*\"[tiab] OR \"failure mode and effect*\"[tiab] OR \"failure modes and effect*\"[tiab] OR \"high reliability organi*\"[tiab] OR \"safety-II\"[tiab] OR \"just culture\"[tiab] OR \"speaking up\"[tiab] OR \"safety huddle*\"[tiab] OR \"surgical safety\"[tiab] OR \"safety checklist*\"[tiab]",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:tiab_measurement": {
+  "drawn_from": "\"patient safety indicator*\"[tiab] OR \"global trigger tool\"[tiab] OR \"preventable harm\"[tiab] OR \"avoidable harm\"[tiab] OR \"patient harm\"[tiab] OR \"iatrogenic harm\"[tiab] OR \"safety incident*\"[tiab] OR \"safety event*\"[tiab] OR \"adverse incident*\"[tiab] OR \"critical incident*\"[tiab] OR \"serious incident*\"[tiab] OR \"unsafe care\"[tiab]",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:tiab_disclosure": {
+  "drawn_from": "(disclos*[tiab] OR apolog*[tiab]) AND (error*[tiab] OR \"adverse event*\"[tiab] OR mistake*[tiab] OR harm[tiab])",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:tiab_diag_narrow": {
+  "drawn_from": "\"diagnostic safety\"[tiab] OR \"missed diagnos*\"[tiab] OR (\"missed opportunit*\"[tiab] AND diagnos*[tiab]) OR (\"abnormal test result*\"[tiab] AND follow*[tiab]) OR \"test result follow-up\"[tiab]",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:tiab_hai": {
+  "drawn_from": "\"healthcare-associated infection*\"[tiab] OR \"health care-associated infection*\"[tiab] OR \"healthcare associated infection*\"[tiab] OR \"hospital-acquired infection*\"[tiab] OR \"hospital acquired infection*\"[tiab] OR \"nosocomial infection*\"[tiab] OR \"central line-associated\"[tiab] OR CLABSI[tiab] OR CAUTI[tiab] OR \"catheter-associated urinary\"[tiab]",
+  "target": "hai_prevention",
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:tiab_hosp_acquired": {
+  "drawn_from": "\"hospital-acquired\"[tiab] OR \"hospital acquired\"[tiab] OR \"inpatient fall*\"[tiab] OR \"in-hospital fall*\"[tiab] OR \"patient fall*\"[tiab] OR \"unplanned extubation*\"[tiab] OR (\"pressure injur*\"[tiab] AND (hospital*[tiab] OR inpatient*[tiab] OR ICU[tiab]))",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:tiab_deterioration": {
+  "drawn_from": "\"rapid response team*\"[tiab] OR \"rapid response system*\"[tiab] OR \"medical emergency team*\"[tiab] OR \"failure to rescue\"[tiab] OR \"clinical deterioration\"[tiab]",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:tiab_handoff": {
+  "drawn_from": "(handoff*[tiab] OR hand-off*[tiab] OR handover*[tiab]) AND (patient*[tiab] OR nurs*[tiab] OR resident*[tiab] OR shift*[tiab] OR clinical[tiab])",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:tiab_malpractice": {
+  "drawn_from": "malpractice[tiab] OR \"medicolegal claim*\"[tiab] OR \"closed claim*\"[tiab]",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:tiab_overdose_care": {
+  "drawn_from": "\"opioid-induced respiratory depression\"[tiab] OR oversedation[tiab] OR \"over-sedation\"[tiab] OR \"insulin error*\"[tiab] OR (overdose*[tiab] AND (hospital*[tiab] OR inpatient*[tiab]) AND (error*[tiab] OR iatrogenic[tiab] OR prescrib*[tiab]))",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:tiab_ae_narrow": {
+  "drawn_from": "\"adverse event*\"[tiab] AND (preventab*[tiab] OR \"patient safety\"[tiab] OR \"medical error*\"[tiab] OR iatrogenic[tiab] OR \"quality of care\"[tiab] OR \"incident report*\"[tiab] OR \"trigger tool\"[tiab] OR \"chart review\"[tiab] OR \"record review\"[tiab])",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:q_qi_mesh_safe": {
+  "drawn_from": "\"Quality Improvement\"[MeSH] AND (safety[tiab] OR safe[tiab] OR error*[tiab] OR harm[tiab] OR harms[tiab] OR harmful[tiab] OR adverse[tiab] OR iatrogenic[tiab] OR preventable[tiab] OR \"near miss*\"[tiab] OR mistake*[tiab])",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:q_qi_tiab_safe": {
+  "drawn_from": "(\"quality improvement\"[tiab] OR \"quality of care\"[tiab] OR \"healthcare quality\"[tiab] OR \"health care quality\"[tiab]) AND (safety[tiab] OR safe[tiab] OR error*[tiab] OR harm[tiab] OR harms[tiab] OR harmful[tiab] OR adverse[tiab] OR iatrogenic[tiab] OR preventable[tiab] OR \"near miss*\"[tiab] OR mistake*[tiab])",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:q_qi_majr": {
+  "drawn_from": "\"Quality Improvement\"[Majr]",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 1",
+  "drawn": "2026-11-23"
+ },
+ "cand:v2_mesh_med_errors": {
+  "drawn_from": "\"Medical Errors\"[MeSH:noexp] OR \"Medication Errors\"[MeSH] OR \"Near Miss, Healthcare\"[MeSH]",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 2",
+  "drawn": "2026-11-23"
+ },
+ "cand:v2_mesh_diag_errors": {
+  "drawn_from": "(\"Diagnostic Errors\"[MeSH:noexp] OR \"Missed Diagnosis\"[MeSH]) NOT \"Case Reports\"[pt]",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 2",
+  "drawn": "2026-11-23"
+ },
+ "cand:v2_mesh_iatrogenic_noexp": {
+  "drawn_from": "\"Iatrogenic Disease\"[MeSH:noexp]",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 2",
+  "drawn": "2026-11-23"
+ },
+ "cand:v2_mesh_safety_systems": {
+  "drawn_from": "(\"Safety Management\"[MeSH] AND (patient*[tiab] OR (hospital*[tiab] OR inpatient*[tiab] OR hospitali*[tiab] OR \"nursing home*\"[tiab] OR \"long-term care\"[tiab] OR \"intensive care\"[tiab] OR ICU[tiab] OR ward*[tiab] OR \"acute care\"[tiab] OR \"health care\"[tiab] OR healthcare[tiab]))) OR \"Root Cause Analysis\"[MeSH] OR (\"Truth Disclosure\"[MeSH] AND (error*[tiab] OR \"adverse event*\"[tiab] OR harm[tiab] OR mistake*[tiab] OR \"Medical Errors\"[MeSH]))",
+  "target": "mesh_safety_systems",
+  "n": 20,
+  "note": "candidate, round 2",
+  "drawn": "2026-11-23"
+ },
+ "cand:v2_mesh_handoff_rrt": {
+  "drawn_from": "\"Patient Handoff\"[MeSH] OR \"Clinical Deterioration\"[MeSH] OR \"Hospital Rapid Response Team\"[MeSH]",
+  "target": "mesh_handoff_deterioration",
+  "n": 20,
+  "note": "candidate, round 2",
+  "drawn": "2026-11-23"
+ },
+ "cand:v2_pressure_falls": {
+  "drawn_from": "(\"Pressure Ulcer\"[MeSH] AND (hospital*[tiab] OR inpatient*[tiab] OR hospitali*[tiab] OR \"nursing home*\"[tiab] OR \"long-term care\"[tiab] OR \"intensive care\"[tiab] OR ICU[tiab] OR ward*[tiab] OR \"acute care\"[tiab] OR \"health care\"[tiab] OR healthcare[tiab])) OR (\"Accidental Falls\"[MeSH] AND (inpatient*[tiab] OR \"in-hospital\"[tiab] OR hospitalized[tiab] OR hospitalised[tiab] OR ward*[tiab] OR \"acute care\"[tiab] OR \"patient safety\"[tiab])) OR \"inpatient fall*\"[tiab] OR \"in-hospital fall*\"[tiab] OR \"hospital fall*\"[tiab] OR \"patient fall*\"[tiab] OR \"hospital-acquired pressure\"[tiab] OR \"unplanned extubation*\"[tiab]",
+  "target": "pressure_injury_falls",
+  "n": 20,
+  "note": "candidate, round 2",
+  "drawn": "2026-11-23"
+ },
+ "cand:v2_hai": {
+  "drawn_from": "(\"Cross Infection/prevention and control\"[MeSH] OR (\"Hand Hygiene\"[MeSH] AND (hospital*[tiab] OR inpatient*[tiab] OR hospitali*[tiab] OR \"nursing home*\"[tiab] OR \"long-term care\"[tiab] OR \"intensive care\"[tiab] OR ICU[tiab] OR ward*[tiab] OR \"acute care\"[tiab] OR \"health care\"[tiab] OR healthcare[tiab])) OR ((\"healthcare-associated infection*\"[tiab] OR \"health care-associated infection*\"[tiab] OR \"hospital-acquired infection*\"[tiab] OR \"nosocomial infection*\"[tiab] OR \"central line-associated\"[tiab] OR CLABSI[tiab] OR CAUTI[tiab] OR \"catheter-associated urinary\"[tiab]) AND (prevent*[tiab] OR reduc*[tiab] OR bundle*[tiab] OR compliance[tiab] OR \"quality improvement\"[tiab] OR \"infection control\"[tiab] OR \"infection prevention\"[tiab] OR surveillance[tiab]))) NOT (\"Bacterial Typing Techniques\"[MeSH] OR \"Genome, Bacterial\"[MeSH] OR \"Whole Genome Sequencing\"[MeSH] OR \"Molecular Epidemiology\"[MeSH] OR \"Microbial Sensitivity Tests\"[MeSH] OR (Animals[MeSH] NOT Humans[MeSH]))",
+  "target": "hai_prevention",
+  "n": 20,
+  "note": "candidate, round 2",
+  "drawn": "2026-11-23"
+ },
+ "cand:v2_hit_safety": {
+  "drawn_from": "(\"Medical Order Entry Systems\"[MeSH] OR \"Decision Support Systems, Clinical\"[MeSH] OR \"Electronic Prescribing\"[MeSH] OR \"Drug Therapy, Computer-Assisted\"[MeSH] OR \"Medication Systems, Hospital\"[MeSH] OR \"Clinical Alarms\"[MeSH] OR \"Infusion Pumps\"[MeSH] OR \"order entry\"[tiab] OR CPOE[tiab] OR \"decision support\"[tiab] OR \"electronic prescribing\"[tiab] OR e-prescribing[tiab] OR \"electronic health record*\"[tiab] OR \"health information technology\"[tiab] OR \"smart pump*\"[tiab] OR \"infusion pump*\"[tiab] OR barcode*[tiab] OR \"bar code*\"[tiab] OR \"bar-code*\"[tiab]) AND (\"medication error*\"[tiab] OR \"prescribing error*\"[tiab] OR error*[ti] OR \"patient safety\"[tiab] OR \"medication safety\"[tiab] OR \"adverse drug\"[tiab] OR harm[tiab] OR alert*[tiab] OR override*[tiab] OR \"Medication Errors\"[MeSH] OR \"Drug Interactions\"[MeSH] OR \"Drug Hypersensitivity\"[MeSH] OR \"Drug-Related Side Effects and Adverse Reactions\"[MeSH])",
+  "target": "hit_safety",
+  "n": 20,
+  "note": "candidate, round 2",
+  "drawn": "2026-11-23"
+ },
+ "cand:v2_tiab_patient_safety_ctx": {
+  "drawn_from": "\"patient safety\"[tiab] AND (\"patient safety\"[ti] OR error*[tiab] OR harm[tiab] OR \"adverse event*\"[tiab] OR incident*[tiab] OR culture[tiab] OR climate[tiab] OR \"near miss*\"[tiab] OR preventable[tiab] OR iatrogenic[tiab])",
+  "target": "tiab_patient_safety",
+  "n": 20,
+  "note": "candidate, round 2",
+  "drawn": "2026-11-23"
+ },
+ "cand:v2_tiab_incidents": {
+  "drawn_from": "\"never event*\"[tiab] OR \"sentinel event*\"[tiab] OR \"incident report*\"[tiab] OR \"trigger tool*\"[tiab] OR ((\"near miss*\"[tiab] AND (error*[tiab] OR medication*[tiab] OR incident*[tiab] OR report*[tiab] OR \"patient safety\"[tiab])) NOT \"maternal near miss*\"[tiab])",
+  "target": "tiab_incidents",
+  "n": 20,
+  "note": "candidate, round 2",
+  "drawn": "2026-11-23"
+ },
+ "cand:v2_tiab_error_types": {
+  "drawn_from": "\"prescribing error*\"[tiab] OR \"dispensing error*\"[tiab] OR \"administration error*\"[tiab] OR \"dosing error*\"[tiab] OR \"drug error*\"[tiab] OR \"ordering error*\"[tiab] OR \"transfusion error*\"[tiab] OR \"preanalytical error*\"[tiab] OR \"pre-analytical error*\"[tiab] OR \"wrong-patient\"[tiab] OR \"wrong patient\"[tiab] OR \"wrong-site\"[tiab] OR \"wrong site\"[tiab] OR \"wrong-side\"[tiab] OR \"retract-and-reorder\"[tiab] OR \"sound-alike\"[tiab] OR \"high-alert medication*\"[tiab] OR \"retained surgical\"[tiab]",
+  "target": "tiab_error_types",
+  "n": 20,
+  "note": "candidate, round 2",
+  "drawn": "2026-11-23"
+ },
+ "cand:v2_tiab_culture": {
+  "drawn_from": "\"second victim*\"[tiab] OR \"just culture\"[tiab] OR ((\"safety culture\"[tiab] OR \"safety climate\"[tiab] OR \"culture of safety\"[tiab] OR \"root cause analys*\"[tiab] OR \"failure mode*\"[tiab] OR \"high reliability organi*\"[tiab] OR \"safety-II\"[tiab] OR \"speaking up\"[tiab] OR \"safety huddle*\"[tiab] OR \"safety checklist*\"[tiab]) AND (patient*[tiab] OR hospital*[tiab] OR healthcare[tiab] OR \"health care\"[tiab] OR clinical[tiab] OR nurs*[tiab] OR medical[tiab]))",
+  "target": "tiab_culture",
+  "n": 20,
+  "note": "candidate, round 2",
+  "drawn": "2026-11-23"
+ },
+ "cand:v2_tiab_measurement": {
+  "drawn_from": "\"patient safety indicator*\"[tiab] OR \"global trigger tool\"[tiab] OR \"preventable harm\"[tiab] OR \"avoidable harm\"[tiab] OR \"patient harm\"[tiab] OR \"iatrogenic harm\"[tiab] OR \"safety incident*\"[tiab] OR \"adverse incident*\"[tiab] OR \"unsafe care\"[tiab] OR \"diagnostic safety\"[tiab] OR (\"safety event*\"[tiab] AND (patient*[tiab] OR hospital*[tiab]))",
+  "target": "tiab_measurement",
+  "n": 20,
+  "note": "candidate, round 2",
+  "drawn": "2026-11-23"
+ },
+ "cand:v2_tiab_rrt": {
+  "drawn_from": "\"rapid response team*\"[tiab] OR \"rapid response system*\"[tiab] OR \"medical emergency team*\"[tiab] OR \"failure to rescue\"[tiab]",
+  "target": "tiab_rapid_response",
+  "n": 20,
+  "note": "candidate, round 2",
+  "drawn": "2026-11-23"
+ },
+ "cand:v2_tiab_handoff": {
+  "drawn_from": "(handoff*[tiab] OR hand-off*[tiab] OR handover*[tiab]) AND (communication[tiab] OR safety[tiab] OR error*[tiab] OR shift*[tiab])",
+  "target": "tiab_handoff",
+  "n": 20,
+  "note": "candidate, round 2",
+  "drawn": "2026-11-23"
+ },
+ "cand:v2_malpractice_claims": {
+  "drawn_from": "\"closed claim*\"[tiab] OR \"malpractice claim*\"[tiab] OR (\"Malpractice\"[MeSH] AND (error*[tiab] OR \"adverse event*\"[tiab] OR \"patient safety\"[tiab] OR claim*[tiab]))",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 2",
+  "drawn": "2026-11-23"
+ },
+ "cand:v2_adr_care": {
+  "drawn_from": "\"Drug-Related Side Effects and Adverse Reactions\"[Majr] AND (preventab*[tiab] OR \"drug-related problem*\"[tiab] OR \"medication-related problem*\"[tiab] OR polypharmacy[tiab] OR \"nursing home*\"[tiab] OR inpatient*[tiab] OR outpatient*[tiab] OR \"primary care\"[tiab] OR \"emergency department\"[tiab] OR \"hospital admission*\"[tiab])",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 2",
+  "drawn": "2026-11-23"
+ },
+ "cand:v2_q_qi_safe": {
+  "drawn_from": "(\"Quality Improvement\"[MeSH] OR \"quality improvement\"[tiab] OR \"quality of care\"[tiab] OR \"healthcare quality\"[tiab] OR \"health care quality\"[tiab]) AND (\"patient safety\"[tiab] OR \"safety culture\"[tiab] OR \"medical error*\"[tiab] OR \"medication error*\"[tiab] OR error*[ti] OR harm[tiab] OR \"adverse event*\"[tiab] OR \"adverse drug\"[tiab] OR iatrogenic[tiab] OR preventable[tiab] OR \"hospital-acquired\"[tiab] OR \"healthcare-associated\"[tiab] OR \"near miss*\"[tiab] OR \"never event*\"[tiab])",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 2",
+  "drawn": "2026-11-23"
+ },
+ "cand:v2f_mesh_diag_errors": {
+  "drawn_from": "(\"Diagnostic Errors\"[MeSH:noexp] OR \"Missed Diagnosis\"[MeSH]) AND (\"Patient Safety\"[MeSH] OR \"Medical Errors\"[MeSH:noexp] OR \"patient safety\"[tiab] OR \"diagnostic error*\"[tiab] OR \"diagnostic safety\"[tiab] OR malpractice[tiab] OR \"missed opportunit*\"[tiab])",
+  "target": "mesh_diagnostic_errors",
+  "n": 20,
+  "note": "candidate, round 3",
+  "drawn": "2026-11-23"
+ },
+ "cand:v2f_mesh_iatrogenic": {
+  "drawn_from": "\"Iatrogenic Disease\"[Majr:noexp] NOT \"Case Reports\"[pt]",
+  "target": "mesh_iatrogenic",
+  "n": 20,
+  "note": "candidate, round 3",
+  "drawn": "2026-11-23"
+ },
+ "cand:v2f_malpractice": {
+  "drawn_from": "\"closed claim*\"[tiab] OR (\"Malpractice\"[MeSH] AND (\"Medical Errors\"[MeSH] OR \"Patient Safety\"[MeSH] OR error*[tiab] OR \"adverse event*\"[tiab] OR \"patient safety\"[tiab]))",
+  "target": "malpractice_claims",
+  "n": 20,
+  "note": "candidate, round 3",
+  "drawn": "2026-11-23"
+ },
+ "cand:v3_q_qi_safe": {
+  "drawn_from": "(\"Quality Improvement\"[Majr] OR \"quality improvement\"[ti] OR \"quality of care\"[ti] OR \"healthcare quality\"[ti] OR \"health care quality\"[ti] OR \"improvement project\"[ti] OR \"improvement initiative\"[ti]) AND (\"patient safety\"[tiab] OR \"safety culture\"[tiab] OR \"medical error*\"[tiab] OR \"medication error*\"[tiab] OR error*[ti] OR \"adverse event*\"[tiab] OR \"adverse drug\"[tiab] OR iatrogenic[tiab] OR \"preventable adverse\"[tiab] OR \"preventable harm\"[tiab] OR \"patient harm\"[tiab] OR \"avoidable harm\"[tiab] OR \"hospital-acquired\"[tiab] OR \"healthcare-associated\"[tiab] OR \"health care-associated\"[tiab] OR \"near miss*\"[tiab] OR \"never event*\"[tiab] OR \"Patient Safety\"[MeSH] OR \"Medical Errors\"[MeSH:noexp] OR \"Medication Errors\"[MeSH:noexp] OR \"Iatrogenic Disease\"[MeSH])",
+  "target": "quality_improvement_safety",
+  "n": 20,
+  "note": "candidate, round 3",
+  "drawn": "2026-11-23"
+ },
+ "cand:v3_hai": {
+  "drawn_from": "(\"Cross Infection/prevention and control\"[MeSH] OR (\"Hand Hygiene\"[MeSH] AND (hospital*[tiab] OR inpatient*[tiab] OR hospitali*[tiab] OR \"nursing home*\"[tiab] OR \"long-term care\"[tiab] OR \"intensive care\"[tiab] OR ICU[tiab] OR ward*[tiab] OR \"acute care\"[tiab] OR \"health care\"[tiab] OR healthcare[tiab])) OR ((\"healthcare-associated infection*\"[tiab] OR \"health care-associated infection*\"[tiab] OR \"hospital-acquired infection*\"[tiab] OR \"nosocomial infection*\"[tiab] OR \"central line-associated\"[tiab] OR CLABSI[tiab] OR CAUTI[tiab] OR \"catheter-associated urinary\"[tiab]) AND (prevent*[tiab] OR reduc*[tiab] OR bundle*[tiab] OR compliance[tiab] OR \"quality improvement\"[tiab] OR \"infection control\"[tiab] OR \"infection prevention\"[tiab] OR surveillance[tiab]))) NOT (\"Bacterial Typing Techniques\"[MeSH] OR \"Genome, Bacterial\"[MeSH] OR \"Whole Genome Sequencing\"[MeSH] OR \"Molecular Epidemiology\"[MeSH] OR \"Microbial Sensitivity Tests\"[MeSH] OR \"Bacterial Proteins\"[MeSH] OR \"Virulence\"[MeSH] OR \"Genes, Bacterial\"[MeSH] OR \"Biofilms\"[Majr] OR \"Biosensing Techniques\"[MeSH] OR \"Anti-Bacterial Agents/pharmacology\"[MeSH] OR \"Hospitals, Animal\"[MeSH] OR \"Veterinarians\"[MeSH] OR (Animals[MeSH] NOT Humans[MeSH]))",
+  "target": "hai_prevention",
+  "n": 20,
+  "note": "candidate, round 3",
+  "drawn": "2026-11-23"
+ },
+ "cand:v3_mesh_med_errors": {
+  "drawn_from": "\"Medical Errors\"[MeSH:noexp] OR \"Medication Errors\"[MeSH:noexp] OR \"Medication Reconciliation\"[MeSH] OR \"Near Miss, Healthcare\"[MeSH] OR (\"Inappropriate Prescribing\"[MeSH] AND (\"Potentially Inappropriate Medication List\"[MeSH] OR \"potentially inappropriate\"[tiab] OR older[tiab] OR elderly[tiab] OR adverse[tiab] OR harm*[tiab] OR \"Drug-Related Side Effects and Adverse Reactions\"[MeSH]))",
+  "target": "mesh_errors",
+  "n": 20,
+  "note": "candidate, round 3",
+  "drawn": "2026-11-23"
+ },
+ "cand:v4_tiab_diag_safety": {
+  "drawn_from": "(\"missed opportunit*\"[tiab] AND diagnos*[tiab]) OR ((\"test result*\"[tiab] OR \"abnormal result*\"[tiab] OR \"imaging result*\"[tiab] OR \"abnormal finding*\"[tiab]) AND (\"follow-up\"[tiab] OR \"closing the loop\"[tiab] OR \"closed loop\"[tiab] OR communicat*[tiab]) AND (missed[tiab] OR delay*[tiab] OR \"lack of\"[tiab] OR failure[tiab] OR timely[tiab] OR \"lost to follow-up\"[tiab] OR safety[tiab])) OR ((\"closing the loop\"[tiab] OR \"loop closure\"[tiab]) AND (test*[tiab] OR referral*[tiab] OR result*[tiab])) OR (trigger*[tiab] AND (\"diagnostic evaluation\"[tiab] OR \"missed opportunit*\"[tiab] OR \"delays in\"[tiab] OR \"diagnostic error*\"[tiab])) OR ((\"diagnostic delay*\"[tiab] OR \"delayed diagnos*\"[tiab] OR \"delays in diagnos*\"[tiab]) AND (error*[tiab] OR safety[tiab] OR \"missed opportunit*\"[tiab] OR malpractice[tiab] OR preventab*[tiab] OR avoidable[tiab]))",
+  "target": null,
+  "n": 20,
+  "note": "candidate, round 3",
+  "drawn": "2026-11-23"
+ },
+ "cand:v5_tiab_diag_safety": {
+  "drawn_from": "(\"missed opportunit*\"[tiab] AND (\"diagnostic error*\"[tiab] OR \"missed diagnos*\"[tiab] OR \"delayed diagnos*\"[tiab] OR \"diagnostic delay*\"[tiab] OR \"timely diagnos*\"[tiab] OR \"earlier diagnos*\"[tiab] OR \"diagnostic evaluation\"[tiab] OR \"diagnostic opportunit*\"[tiab])) OR \"missed diagnostic opportunit*\"[tiab] OR \"delays in follow-up\"[tiab] OR \"delayed follow-up of\"[tiab] OR \"follow-up of abnormal\"[tiab] OR \"lack of timely follow-up\"[tiab] OR \"missed test result*\"[tiab] OR \"test results management\"[tiab] OR ((\"closing the loop\"[tiab] OR \"loop closure\"[tiab]) AND (\"test result*\"[tiab] OR referral*[tiab])) OR (trigger*[tiab] AND (\"diagnostic evaluation\"[tiab] OR \"missed opportunit*\"[tiab] OR \"delays in diagnos*\"[tiab] OR \"diagnostic error*\"[tiab]))",
+  "target": "tiab_diagnostic_safety",
+  "n": 20,
+  "note": "candidate, round 3",
+  "drawn": "2026-11-23"
+ },
+ "v2_draft_corpus": {
+  "drawn_from": "(\"Medical Errors\"[MeSH:noexp] OR \"Medication Errors\"[MeSH] OR \"Near Miss, Healthcare\"[MeSH]) OR ((\"Diagnostic Errors\"[MeSH:noexp] OR \"Missed Diagnosis\"[MeSH]) AND (\"Patient Safety\"[MeSH] OR \"Medical Errors\"[MeSH:noexp] OR \"patient safety\"[tiab] OR \"diagnostic error*\"[tiab] OR \"diagnostic safety\"[tiab] OR malpractice[tiab] OR \"missed opportunit*\"[tiab])) OR (\"Patient Safety\"[MeSH] OR \"Patient Harm\"[MeSH]) OR (\"Iatrogenic Disease\"[Majr:noexp] NOT \"Case Reports\"[pt]) OR ((\"Safety Management\"[MeSH] AND (patient*[tiab] OR (hospital*[tiab] OR inpatient*[tiab] OR hospitali*[tiab] OR \"nursing home*\"[tiab] OR \"long-term care\"[tiab] OR \"intensive care\"[tiab] OR ICU[tiab] OR ward*[tiab] OR \"acute care\"[tiab] OR \"health care\"[tiab] OR healthcare[tiab]))) OR \"Root Cause Analysis\"[MeSH] OR (\"Truth Disclosure\"[MeSH] AND (error*[tiab] OR \"adverse event*\"[tiab] OR harm[tiab] OR mistake*[tiab] OR \"Medical Errors\"[MeSH]))) OR (\"Patient Handoff\"[MeSH] OR \"Clinical Deterioration\"[MeSH] OR \"Hospital Rapid Response Team\"[MeSH]) OR ((\"Pressure Ulcer\"[MeSH] AND (hospital*[tiab] OR inpatient*[tiab] OR hospitali*[tiab] OR \"nursing home*\"[tiab] OR \"long-term care\"[tiab] OR \"intensive care\"[tiab] OR ICU[tiab] OR ward*[tiab] OR \"acute care\"[tiab] OR \"health care\"[tiab] OR healthcare[tiab])) OR (\"Accidental Falls\"[MeSH] AND (inpatient*[tiab] OR \"in-hospital\"[tiab] OR hospitalized[tiab] OR hospitalised[tiab] OR ward*[tiab] OR \"acute care\"[tiab] OR \"patient safety\"[tiab])) OR \"inpatient fall*\"[tiab] OR \"in-hospital fall*\"[tiab] OR \"hospital fall*\"[tiab] OR \"patient fall*\"[tiab] OR \"hospital-acquired pressure\"[tiab] OR \"unplanned extubation*\"[tiab] OR (\"fall prevention\"[tiab] AND (hospital*[tiab] OR inpatient*[tiab] OR nurs*[tiab]))) OR ((\"Cross Infection/prevention and control\"[MeSH] OR (\"Hand Hygiene\"[MeSH] AND (hospital*[tiab] OR inpatient*[tiab] OR hospitali*[tiab] OR \"nursing home*\"[tiab] OR \"long-term care\"[tiab] OR \"intensive care\"[tiab] OR ICU[tiab] OR ward*[tiab] OR \"acute care\"[tiab] OR \"health care\"[tiab] OR healthcare[tiab])) OR ((\"healthcare-associated infection*\"[tiab] OR \"health care-associated infection*\"[tiab] OR \"hospital-acquired infection*\"[tiab] OR \"nosocomial infection*\"[tiab] OR \"central line-associated\"[tiab] OR CLABSI[tiab] OR CAUTI[tiab] OR \"catheter-associated urinary\"[tiab]) AND (prevent*[tiab] OR reduc*[tiab] OR bundle*[tiab] OR compliance[tiab] OR \"quality improvement\"[tiab] OR \"infection control\"[tiab] OR \"infection prevention\"[tiab] OR surveillance[tiab]))) NOT (\"Bacterial Typing Techniques\"[MeSH] OR \"Genome, Bacterial\"[MeSH] OR \"Whole Genome Sequencing\"[MeSH] OR \"Molecular Epidemiology\"[MeSH] OR \"Microbial Sensitivity Tests\"[MeSH] OR (Animals[MeSH] NOT Humans[MeSH]))) OR (((\"Medical Order Entry Systems\"[MeSH] OR \"Decision Support Systems, Clinical\"[MeSH] OR \"Electronic Prescribing\"[MeSH] OR \"Drug Therapy, Computer-Assisted\"[MeSH] OR \"Medication Systems, Hospital\"[MeSH] OR \"Clinical Alarms\"[MeSH] OR \"Infusion Pumps\"[MeSH] OR \"order entry\"[tiab] OR CPOE[tiab] OR \"decision support\"[tiab] OR \"electronic prescribing\"[tiab] OR e-prescribing[tiab] OR \"electronic health record*\"[tiab] OR \"health information technology\"[tiab] OR \"smart pump*\"[tiab] OR \"infusion pump*\"[tiab] OR barcode*[tiab] OR \"bar code*\"[tiab] OR \"bar-code*\"[tiab]) AND (\"medication error*\"[tiab] OR \"prescribing error*\"[tiab] OR error*[ti] OR \"patient safety\"[tiab] OR \"medication safety\"[tiab] OR \"adverse drug\"[tiab] OR harm[tiab] OR alert*[tiab] OR override*[tiab] OR \"Medication Errors\"[MeSH] OR \"Drug Interactions\"[MeSH] OR \"Drug Hypersensitivity\"[MeSH] OR \"Drug-Related Side Effects and Adverse Reactions\"[MeSH])) OR \"EHR safety\"[tiab] OR \"health IT safety\"[tiab] OR \"health IT-related\"[tiab] OR \"HIT-related\"[tiab] OR \"e-iatrogenesis\"[tiab] OR \"SAFER guide*\"[tiab]) OR (\"medical error*\"[tiab] OR \"medication error*\"[tiab] OR \"diagnostic error*\"[tiab] OR \"surgical error*\"[tiab]) OR (\"patient safety\"[tiab] AND (\"patient safety\"[ti] OR error*[tiab] OR harm[tiab] OR \"adverse event*\"[tiab] OR incident*[tiab] OR culture[tiab] OR climate[tiab] OR \"near miss*\"[tiab] OR preventable[tiab] OR iatrogenic[tiab])) OR (\"never event*\"[tiab] OR \"sentinel event*\"[tiab] OR \"incident report*\"[tiab] OR \"trigger tool*\"[tiab] OR ((\"near miss*\"[tiab] AND (error*[tiab] OR medication*[tiab] OR incident*[tiab] OR report*[tiab] OR \"patient safety\"[tiab])) NOT \"maternal near miss*\"[tiab])) OR (\"adverse drug event*\"[tiab] OR \"preventable adverse\"[tiab] OR \"medication safety\"[tiab] OR \"medication-related harm\"[tiab] OR \"drug-related problem*\"[tiab] OR \"medication-related problem*\"[tiab] OR \"medication-related hospital*\"[tiab] OR \"drug-related hospital*\"[tiab] OR \"drug-related admission*\"[tiab] OR \"medication-related admission*\"[tiab]) OR (\"prescribing error*\"[tiab] OR \"dispensing error*\"[tiab] OR \"administration error*\"[tiab] OR \"dosing error*\"[tiab] OR \"drug error*\"[tiab] OR \"transfusion error*\"[tiab] OR \"preanalytical error*\"[tiab] OR \"pre-analytical error*\"[tiab] OR \"wrong-patient\"[tiab] OR \"wrong patient\"[tiab] OR \"wrong-site\"[tiab] OR \"wrong site\"[tiab] OR \"wrong-side\"[tiab] OR \"retract-and-reorder\"[tiab] OR \"sound-alike\"[tiab] OR \"high-alert medication*\"[tiab] OR \"retained surgical\"[tiab]) OR (\"alert fatigue\"[tiab] OR \"alarm fatigue\"[tiab] OR \"alert override*\"[tiab] OR \"override rate*\"[tiab] OR \"overridden alert*\"[tiab] OR \"interruptive alert*\"[tiab] OR \"medication alert*\"[tiab] OR \"drug alert*\"[tiab] OR \"drug-drug interaction alert*\"[tiab] OR \"interaction alert*\"[tiab] OR \"allergy alert*\"[tiab] OR \"alarm safety\"[tiab]) OR (\"second victim*\"[tiab] OR \"just culture\"[tiab] OR ((\"safety culture\"[tiab] OR \"safety climate\"[tiab] OR \"culture of safety\"[tiab] OR \"root cause analys*\"[tiab] OR \"failure mode and effect*\"[tiab] OR \"failure modes and effect*\"[tiab] OR \"high reliability organi*\"[tiab] OR \"safety-II\"[tiab] OR \"speaking up\"[tiab] OR \"safety huddle*\"[tiab] OR \"safety checklist*\"[tiab]) AND (patient*[tiab] OR hospital*[tiab] OR healthcare[tiab] OR \"health care\"[tiab] OR clinical[tiab] OR nurs*[tiab] OR medical[tiab]))) OR (\"patient safety indicator*\"[tiab] OR \"global trigger tool\"[tiab] OR \"preventable harm\"[tiab] OR \"avoidable harm\"[tiab] OR \"patient harm\"[tiab] OR \"iatrogenic harm\"[tiab] OR \"safety incident*\"[tiab] OR \"adverse incident*\"[tiab] OR \"unsafe care\"[tiab] OR \"diagnostic safety\"[tiab] OR (\"safety event*\"[tiab] AND (patient*[tiab] OR hospital*[tiab])) OR \"critical test result*\"[tiab] OR \"critical result*\"[tiab] OR \"test results pending\"[tiab] OR \"pending test result*\"[tiab] OR \"abnormal test result*\"[tiab] OR \"test result follow-up\"[tiab] OR \"test result management\"[tiab]) OR (\"rapid response team*\"[tiab] OR \"rapid response system*\"[tiab] OR \"medical emergency team*\"[tiab] OR \"failure to rescue\"[tiab]) OR ((handoff*[tiab] OR hand-off*[tiab] OR handover*[tiab]) AND (communication[tiab] OR safety[tiab] OR error*[tiab] OR shift*[tiab])) OR (\"closed claim*\"[tiab] OR (\"Malpractice\"[MeSH] AND (\"Medical Errors\"[MeSH] OR \"Patient Safety\"[MeSH] OR error*[tiab] OR \"adverse event*\"[tiab] OR \"patient safety\"[tiab]))) OR ((\"Quality Improvement\"[MeSH] OR \"quality improvement\"[tiab] OR \"quality of care\"[tiab] OR \"healthcare quality\"[tiab] OR \"health care quality\"[tiab]) AND (\"patient safety\"[tiab] OR \"safety culture\"[tiab] OR \"medical error*\"[tiab] OR \"medication error*\"[tiab] OR error*[ti] OR harm[tiab] OR \"adverse event*\"[tiab] OR \"adverse drug\"[tiab] OR iatrogenic[tiab] OR preventable[tiab] OR \"hospital-acquired\"[tiab] OR \"healthcare-associated\"[tiab] OR \"near miss*\"[tiab] OR \"never event*\"[tiab]))",
+  "target": "QUERY",
+  "n": 150,
+  "note": "random 150 of an intermediate v2 (150,213 papers); the final query is a subset of it plus ~1.8k papers",
+  "drawn": "2026-11-23"
+ },
+ "v2_topup": {
+  "drawn_from": null,
+  "target": "QUERY",
+  "n": 25,
+  "note": "25 more random papers of the final query, excluding v2_draft_corpus",
+  "drawn": "2026-11-23"
+ },
+ "removed_v1_not_v2": {
+  "drawn_from": "((\"Medical Errors\"[MeSH] OR \"Patient Safety\"[MeSH] OR \"Iatrogenic Disease\"[MeSH] OR \"Patient Harm\"[MeSH] OR (\"medical error*\"[tiab] OR \"medication error*\"[tiab] OR \"diagnostic error*\"[tiab] OR \"surgical error*\"[tiab]) OR \"patient safety\"[tiab] OR (\"never event*\"[tiab] OR \"sentinel event*\"[tiab] OR \"near miss*\"[tiab] OR \"incident report*\"[tiab] OR \"trigger tool\"[tiab]) OR \"adverse event*\"[tiab] AND (hospital*[tiab] OR inpatient*[tiab] OR \"health care\"[tiab] OR healthcare[tiab])) OR (\"Quality Improvement\"[MeSH] OR (\"quality of care\"[tiab] OR \"quality improvement\"[tiab] OR \"healthcare quality\"[tiab] OR \"health care quality\"[tiab]))) NOT ((\"Medical Errors\"[MeSH:noexp] OR \"Medication Errors\"[MeSH] OR \"Near Miss, Healthcare\"[MeSH]) OR ((\"Diagnostic Errors\"[MeSH:noexp] OR \"Missed Diagnosis\"[MeSH]) AND (\"Patient Safety\"[MeSH] OR \"Medical Errors\"[MeSH:noexp] OR \"patient safety\"[tiab] OR \"diagnostic error*\"[tiab] OR \"diagnostic safety\"[tiab] OR malpractice[tiab] OR \"missed opportunit*\"[tiab])) OR (\"Patient Safety\"[MeSH] OR \"Patient Harm\"[MeSH]) OR (\"Iatrogenic Disease\"[Majr:noexp] NOT \"Case Reports\"[pt]) OR ((\"Safety Management\"[MeSH] AND (patient*[tiab] OR (hospital*[tiab] OR inpatient*[tiab] OR hospitali*[tiab] OR \"nursing home*\"[tiab] OR \"long-term care\"[tiab] OR \"intensive care\"[tiab] OR ICU[tiab] OR ward*[tiab] OR \"acute care\"[tiab] OR \"health care\"[tiab] OR healthcare[tiab]))) OR \"Root Cause Analysis\"[MeSH] OR (\"Truth Disclosure\"[MeSH] AND (error*[tiab] OR \"adverse event*\"[tiab] OR harm[tiab] OR mistake*[tiab] OR \"Medical Errors\"[MeSH]))) OR (\"Patient Handoff\"[MeSH] OR \"Clinical Deterioration\"[MeSH] OR \"Hospital Rapid Response Team\"[MeSH]) OR ((\"Pressure Ulcer\"[MeSH] AND (hospital*[tiab] OR inpatient*[tiab] OR hospitali*[tiab] OR \"nursing home*\"[tiab] OR \"long-term care\"[tiab] OR \"intensive care\"[tiab] OR ICU[tiab] OR ward*[tiab] OR \"acute care\"[tiab] OR \"health care\"[tiab] OR healthcare[tiab])) OR (\"Accidental Falls\"[MeSH] AND (inpatient*[tiab] OR \"in-hospital\"[tiab] OR hospitalized[tiab] OR hospitalised[tiab] OR ward*[tiab] OR \"acute care\"[tiab] OR \"patient safety\"[tiab])) OR \"inpatient fall*\"[tiab] OR \"in-hospital fall*\"[tiab] OR \"hospital fall*\"[tiab] OR \"patient fall*\"[tiab] OR \"hospital-acquired pressure\"[tiab] OR \"unplanned extubation*\"[tiab] OR (\"fall prevention\"[tiab] AND (hospital*[tiab] OR inpatient*[tiab] OR nurs*[tiab]))) OR ((\"Cross Infection/prevention and control\"[MeSH] OR (\"Hand Hygiene\"[MeSH] AND (hospital*[tiab] OR inpatient*[tiab] OR hospitali*[tiab] OR \"nursing home*\"[tiab] OR \"long-term care\"[tiab] OR \"intensive care\"[tiab] OR ICU[tiab] OR ward*[tiab] OR \"acute care\"[tiab] OR \"health care\"[tiab] OR healthcare[tiab])) OR ((\"healthcare-associated infection*\"[tiab] OR \"health care-associated infection*\"[tiab] OR \"hospital-acquired infection*\"[tiab] OR \"nosocomial infection*\"[tiab] OR \"central line-associated\"[tiab] OR CLABSI[tiab] OR CAUTI[tiab] OR \"catheter-associated urinary\"[tiab]) AND (prevent*[tiab] OR reduc*[tiab] OR bundle*[tiab] OR compliance[tiab] OR \"quality improvement\"[tiab] OR \"infection control\"[tiab] OR \"infection prevention\"[tiab] OR surveillance[tiab]))) NOT (\"Bacterial Typing Techniques\"[MeSH] OR \"Genome, Bacterial\"[MeSH] OR \"Whole Genome Sequencing\"[MeSH] OR \"Molecular Epidemiology\"[MeSH] OR \"Microbial Sensitivity Tests\"[MeSH] OR (Animals[MeSH] NOT Humans[MeSH]))) OR (((\"Medical Order Entry Systems\"[MeSH] OR \"Decision Support Systems, Clinical\"[MeSH] OR \"Electronic Prescribing\"[MeSH] OR \"Drug Therapy, Computer-Assisted\"[MeSH] OR \"Medication Systems, Hospital\"[MeSH] OR \"Clinical Alarms\"[MeSH] OR \"Infusion Pumps\"[MeSH] OR \"order entry\"[tiab] OR CPOE[tiab] OR \"decision support\"[tiab] OR \"electronic prescribing\"[tiab] OR e-prescribing[tiab] OR \"electronic health record*\"[tiab] OR \"health information technology\"[tiab] OR \"smart pump*\"[tiab] OR \"infusion pump*\"[tiab] OR barcode*[tiab] OR \"bar code*\"[tiab] OR \"bar-code*\"[tiab]) AND (\"medication error*\"[tiab] OR \"prescribing error*\"[tiab] OR error*[ti] OR \"patient safety\"[tiab] OR \"medication safety\"[tiab] OR \"adverse drug\"[tiab] OR harm[tiab] OR alert*[tiab] OR override*[tiab] OR \"Medication Errors\"[MeSH] OR \"Drug Interactions\"[MeSH] OR \"Drug Hypersensitivity\"[MeSH] OR \"Drug-Related Side Effects and Adverse Reactions\"[MeSH])) OR \"EHR safety\"[tiab] OR \"health IT safety\"[tiab] OR \"health IT-related\"[tiab] OR \"HIT-related\"[tiab] OR \"e-iatrogenesis\"[tiab] OR \"SAFER guide*\"[tiab]) OR (\"medical error*\"[tiab] OR \"medication error*\"[tiab] OR \"diagnostic error*\"[tiab] OR \"surgical error*\"[tiab]) OR (\"patient safety\"[tiab] AND (\"patient safety\"[ti] OR error*[tiab] OR harm[tiab] OR \"adverse event*\"[tiab] OR incident*[tiab] OR culture[tiab] OR climate[tiab] OR \"near miss*\"[tiab] OR preventable[tiab] OR iatrogenic[tiab])) OR (\"never event*\"[tiab] OR \"sentinel event*\"[tiab] OR \"incident report*\"[tiab] OR \"trigger tool*\"[tiab] OR ((\"near miss*\"[tiab] AND (error*[tiab] OR medication*[tiab] OR incident*[tiab] OR report*[tiab] OR \"patient safety\"[tiab])) NOT \"maternal near miss*\"[tiab])) OR (\"adverse drug event*\"[tiab] OR \"preventable adverse\"[tiab] OR \"medication safety\"[tiab] OR \"medication-related harm\"[tiab] OR \"drug-related problem*\"[tiab] OR \"medication-related problem*\"[tiab] OR \"medication-related hospital*\"[tiab] OR \"drug-related hospital*\"[tiab] OR \"drug-related admission*\"[tiab] OR \"medication-related admission*\"[tiab]) OR (\"prescribing error*\"[tiab] OR \"dispensing error*\"[tiab] OR \"administration error*\"[tiab] OR \"dosing error*\"[tiab] OR \"drug error*\"[tiab] OR \"transfusion error*\"[tiab] OR \"preanalytical error*\"[tiab] OR \"pre-analytical error*\"[tiab] OR \"wrong-patient\"[tiab] OR \"wrong patient\"[tiab] OR \"wrong-site\"[tiab] OR \"wrong site\"[tiab] OR \"wrong-side\"[tiab] OR \"retract-and-reorder\"[tiab] OR \"sound-alike\"[tiab] OR \"high-alert medication*\"[tiab] OR \"retained surgical\"[tiab]) OR (\"alert fatigue\"[tiab] OR \"alarm fatigue\"[tiab] OR \"alert override*\"[tiab] OR \"override rate*\"[tiab] OR \"overridden alert*\"[tiab] OR \"interruptive alert*\"[tiab] OR \"medication alert*\"[tiab] OR \"drug alert*\"[tiab] OR \"drug-drug interaction alert*\"[tiab] OR \"interaction alert*\"[tiab] OR \"allergy alert*\"[tiab] OR \"alarm safety\"[tiab]) OR (\"second victim*\"[tiab] OR \"just culture\"[tiab] OR ((\"safety culture\"[tiab] OR \"safety climate\"[tiab] OR \"culture of safety\"[tiab] OR \"root cause analys*\"[tiab] OR \"failure mode and effect*\"[tiab] OR \"failure modes and effect*\"[tiab] OR \"high reliability organi*\"[tiab] OR \"safety-II\"[tiab] OR \"speaking up\"[tiab] OR \"safety huddle*\"[tiab] OR \"safety checklist*\"[tiab]) AND (patient*[tiab] OR hospital*[tiab] OR healthcare[tiab] OR \"health care\"[tiab] OR clinical[tiab] OR nurs*[tiab] OR medical[tiab]))) OR (\"patient safety indicator*\"[tiab] OR \"global trigger tool\"[tiab] OR \"preventable harm\"[tiab] OR \"avoidable harm\"[tiab] OR \"patient harm\"[tiab] OR \"iatrogenic harm\"[tiab] OR \"safety incident*\"[tiab] OR \"adverse incident*\"[tiab] OR \"unsafe care\"[tiab] OR \"diagnostic safety\"[tiab] OR (\"safety event*\"[tiab] AND (patient*[tiab] OR hospital*[tiab])) OR \"critical test result*\"[tiab] OR \"critical result*\"[tiab] OR \"test results pending\"[tiab] OR \"pending test result*\"[tiab] OR \"abnormal test result*\"[tiab] OR \"test result follow-up\"[tiab] OR \"test result management\"[tiab]) OR (\"rapid response team*\"[tiab] OR \"rapid response system*\"[tiab] OR \"medical emergency team*\"[tiab] OR \"failure to rescue\"[tiab]) OR ((handoff*[tiab] OR hand-off*[tiab] OR handover*[tiab]) AND (communication[tiab] OR safety[tiab] OR error*[tiab] OR shift*[tiab])) OR (\"closed claim*\"[tiab] OR (\"Malpractice\"[MeSH] AND (\"Medical Errors\"[MeSH] OR \"Patient Safety\"[MeSH] OR error*[tiab] OR \"adverse event*\"[tiab] OR \"patient safety\"[tiab]))) OR ((\"Quality Improvement\"[MeSH] OR \"quality improvement\"[tiab] OR \"quality of care\"[tiab] OR \"healthcare quality\"[tiab] OR \"health care quality\"[tiab]) AND (\"patient safety\"[tiab] OR \"safety culture\"[tiab] OR \"medical error*\"[tiab] OR \"medication error*\"[tiab] OR error*[ti] OR harm[tiab] OR \"adverse event*\"[tiab] OR \"adverse drug\"[tiab] OR iatrogenic[tiab] OR preventable[tiab] OR \"hospital-acquired\"[tiab] OR \"healthcare-associated\"[tiab] OR \"near miss*\"[tiab] OR \"never event*\"[tiab])))",
+  "target": "QUERY_V1",
+  "n": 60,
+  "note": "v1 papers not in the intermediate v2",
+  "drawn": "2026-11-23"
+ },
+ "added_v2_not_v1": {
+  "drawn_from": "((\"Medical Errors\"[MeSH:noexp] OR \"Medication Errors\"[MeSH] OR \"Near Miss, Healthcare\"[MeSH]) OR ((\"Diagnostic Errors\"[MeSH:noexp] OR \"Missed Diagnosis\"[MeSH]) AND (\"Patient Safety\"[MeSH] OR \"Medical Errors\"[MeSH:noexp] OR \"patient safety\"[tiab] OR \"diagnostic error*\"[tiab] OR \"diagnostic safety\"[tiab] OR malpractice[tiab] OR \"missed opportunit*\"[tiab])) OR (\"Patient Safety\"[MeSH] OR \"Patient Harm\"[MeSH]) OR (\"Iatrogenic Disease\"[Majr:noexp] NOT \"Case Reports\"[pt]) OR ((\"Safety Management\"[MeSH] AND (patient*[tiab] OR (hospital*[tiab] OR inpatient*[tiab] OR hospitali*[tiab] OR \"nursing home*\"[tiab] OR \"long-term care\"[tiab] OR \"intensive care\"[tiab] OR ICU[tiab] OR ward*[tiab] OR \"acute care\"[tiab] OR \"health care\"[tiab] OR healthcare[tiab]))) OR \"Root Cause Analysis\"[MeSH] OR (\"Truth Disclosure\"[MeSH] AND (error*[tiab] OR \"adverse event*\"[tiab] OR harm[tiab] OR mistake*[tiab] OR \"Medical Errors\"[MeSH]))) OR (\"Patient Handoff\"[MeSH] OR \"Clinical Deterioration\"[MeSH] OR \"Hospital Rapid Response Team\"[MeSH]) OR ((\"Pressure Ulcer\"[MeSH] AND (hospital*[tiab] OR inpatient*[tiab] OR hospitali*[tiab] OR \"nursing home*\"[tiab] OR \"long-term care\"[tiab] OR \"intensive care\"[tiab] OR ICU[tiab] OR ward*[tiab] OR \"acute care\"[tiab] OR \"health care\"[tiab] OR healthcare[tiab])) OR (\"Accidental Falls\"[MeSH] AND (inpatient*[tiab] OR \"in-hospital\"[tiab] OR hospitalized[tiab] OR hospitalised[tiab] OR ward*[tiab] OR \"acute care\"[tiab] OR \"patient safety\"[tiab])) OR \"inpatient fall*\"[tiab] OR \"in-hospital fall*\"[tiab] OR \"hospital fall*\"[tiab] OR \"patient fall*\"[tiab] OR \"hospital-acquired pressure\"[tiab] OR \"unplanned extubation*\"[tiab] OR (\"fall prevention\"[tiab] AND (hospital*[tiab] OR inpatient*[tiab] OR nurs*[tiab]))) OR ((\"Cross Infection/prevention and control\"[MeSH] OR (\"Hand Hygiene\"[MeSH] AND (hospital*[tiab] OR inpatient*[tiab] OR hospitali*[tiab] OR \"nursing home*\"[tiab] OR \"long-term care\"[tiab] OR \"intensive care\"[tiab] OR ICU[tiab] OR ward*[tiab] OR \"acute care\"[tiab] OR \"health care\"[tiab] OR healthcare[tiab])) OR ((\"healthcare-associated infection*\"[tiab] OR \"health care-associated infection*\"[tiab] OR \"hospital-acquired infection*\"[tiab] OR \"nosocomial infection*\"[tiab] OR \"central line-associated\"[tiab] OR CLABSI[tiab] OR CAUTI[tiab] OR \"catheter-associated urinary\"[tiab]) AND (prevent*[tiab] OR reduc*[tiab] OR bundle*[tiab] OR compliance[tiab] OR \"quality improvement\"[tiab] OR \"infection control\"[tiab] OR \"infection prevention\"[tiab] OR surveillance[tiab]))) NOT (\"Bacterial Typing Techniques\"[MeSH] OR \"Genome, Bacterial\"[MeSH] OR \"Whole Genome Sequencing\"[MeSH] OR \"Molecular Epidemiology\"[MeSH] OR \"Microbial Sensitivity Tests\"[MeSH] OR (Animals[MeSH] NOT Humans[MeSH]))) OR (((\"Medical Order Entry Systems\"[MeSH] OR \"Decision Support Systems, Clinical\"[MeSH] OR \"Electronic Prescribing\"[MeSH] OR \"Drug Therapy, Computer-Assisted\"[MeSH] OR \"Medication Systems, Hospital\"[MeSH] OR \"Clinical Alarms\"[MeSH] OR \"Infusion Pumps\"[MeSH] OR \"order entry\"[tiab] OR CPOE[tiab] OR \"decision support\"[tiab] OR \"electronic prescribing\"[tiab] OR e-prescribing[tiab] OR \"electronic health record*\"[tiab] OR \"health information technology\"[tiab] OR \"smart pump*\"[tiab] OR \"infusion pump*\"[tiab] OR barcode*[tiab] OR \"bar code*\"[tiab] OR \"bar-code*\"[tiab]) AND (\"medication error*\"[tiab] OR \"prescribing error*\"[tiab] OR error*[ti] OR \"patient safety\"[tiab] OR \"medication safety\"[tiab] OR \"adverse drug\"[tiab] OR harm[tiab] OR alert*[tiab] OR override*[tiab] OR \"Medication Errors\"[MeSH] OR \"Drug Interactions\"[MeSH] OR \"Drug Hypersensitivity\"[MeSH] OR \"Drug-Related Side Effects and Adverse Reactions\"[MeSH])) OR \"EHR safety\"[tiab] OR \"health IT safety\"[tiab] OR \"health IT-related\"[tiab] OR \"HIT-related\"[tiab] OR \"e-iatrogenesis\"[tiab] OR \"SAFER guide*\"[tiab]) OR (\"medical error*\"[tiab] OR \"medication error*\"[tiab] OR \"diagnostic error*\"[tiab] OR \"surgical error*\"[tiab]) OR (\"patient safety\"[tiab] AND (\"patient safety\"[ti] OR error*[tiab] OR harm[tiab] OR \"adverse event*\"[tiab] OR incident*[tiab] OR culture[tiab] OR climate[tiab] OR \"near miss*\"[tiab] OR preventable[tiab] OR iatrogenic[tiab])) OR (\"never event*\"[tiab] OR \"sentinel event*\"[tiab] OR \"incident report*\"[tiab] OR \"trigger tool*\"[tiab] OR ((\"near miss*\"[tiab] AND (error*[tiab] OR medication*[tiab] OR incident*[tiab] OR report*[tiab] OR \"patient safety\"[tiab])) NOT \"maternal near miss*\"[tiab])) OR (\"adverse drug event*\"[tiab] OR \"preventable adverse\"[tiab] OR \"medication safety\"[tiab] OR \"medication-related harm\"[tiab] OR \"drug-related problem*\"[tiab] OR \"medication-related problem*\"[tiab] OR \"medication-related hospital*\"[tiab] OR \"drug-related hospital*\"[tiab] OR \"drug-related admission*\"[tiab] OR \"medication-related admission*\"[tiab]) OR (\"prescribing error*\"[tiab] OR \"dispensing error*\"[tiab] OR \"administration error*\"[tiab] OR \"dosing error*\"[tiab] OR \"drug error*\"[tiab] OR \"transfusion error*\"[tiab] OR \"preanalytical error*\"[tiab] OR \"pre-analytical error*\"[tiab] OR \"wrong-patient\"[tiab] OR \"wrong patient\"[tiab] OR \"wrong-site\"[tiab] OR \"wrong site\"[tiab] OR \"wrong-side\"[tiab] OR \"retract-and-reorder\"[tiab] OR \"sound-alike\"[tiab] OR \"high-alert medication*\"[tiab] OR \"retained surgical\"[tiab]) OR (\"alert fatigue\"[tiab] OR \"alarm fatigue\"[tiab] OR \"alert override*\"[tiab] OR \"override rate*\"[tiab] OR \"overridden alert*\"[tiab] OR \"interruptive alert*\"[tiab] OR \"medication alert*\"[tiab] OR \"drug alert*\"[tiab] OR \"drug-drug interaction alert*\"[tiab] OR \"interaction alert*\"[tiab] OR \"allergy alert*\"[tiab] OR \"alarm safety\"[tiab]) OR (\"second victim*\"[tiab] OR \"just culture\"[tiab] OR ((\"safety culture\"[tiab] OR \"safety climate\"[tiab] OR \"culture of safety\"[tiab] OR \"root cause analys*\"[tiab] OR \"failure mode and effect*\"[tiab] OR \"failure modes and effect*\"[tiab] OR \"high reliability organi*\"[tiab] OR \"safety-II\"[tiab] OR \"speaking up\"[tiab] OR \"safety huddle*\"[tiab] OR \"safety checklist*\"[tiab]) AND (patient*[tiab] OR hospital*[tiab] OR healthcare[tiab] OR \"health care\"[tiab] OR clinical[tiab] OR nurs*[tiab] OR medical[tiab]))) OR (\"patient safety indicator*\"[tiab] OR \"global trigger tool\"[tiab] OR \"preventable harm\"[tiab] OR \"avoidable harm\"[tiab] OR \"patient harm\"[tiab] OR \"iatrogenic harm\"[tiab] OR \"safety incident*\"[tiab] OR \"adverse incident*\"[tiab] OR \"unsafe care\"[tiab] OR \"diagnostic safety\"[tiab] OR (\"safety event*\"[tiab] AND (patient*[tiab] OR hospital*[tiab])) OR \"critical test result*\"[tiab] OR \"critical result*\"[tiab] OR \"test results pending\"[tiab] OR \"pending test result*\"[tiab] OR \"abnormal test result*\"[tiab] OR \"test result follow-up\"[tiab] OR \"test result management\"[tiab]) OR (\"rapid response team*\"[tiab] OR \"rapid response system*\"[tiab] OR \"medical emergency team*\"[tiab] OR \"failure to rescue\"[tiab]) OR ((handoff*[tiab] OR hand-off*[tiab] OR handover*[tiab]) AND (communication[tiab] OR safety[tiab] OR error*[tiab] OR shift*[tiab])) OR (\"closed claim*\"[tiab] OR (\"Malpractice\"[MeSH] AND (\"Medical Errors\"[MeSH] OR \"Patient Safety\"[MeSH] OR error*[tiab] OR \"adverse event*\"[tiab] OR \"patient safety\"[tiab]))) OR ((\"Quality Improvement\"[MeSH] OR \"quality improvement\"[tiab] OR \"quality of care\"[tiab] OR \"healthcare quality\"[tiab] OR \"health care quality\"[tiab]) AND (\"patient safety\"[tiab] OR \"safety culture\"[tiab] OR \"medical error*\"[tiab] OR \"medication error*\"[tiab] OR error*[ti] OR harm[tiab] OR \"adverse event*\"[tiab] OR \"adverse drug\"[tiab] OR iatrogenic[tiab] OR preventable[tiab] OR \"hospital-acquired\"[tiab] OR \"healthcare-associated\"[tiab] OR \"near miss*\"[tiab] OR \"never event*\"[tiab]))) NOT ((\"Medical Errors\"[MeSH] OR \"Patient Safety\"[MeSH] OR \"Iatrogenic Disease\"[MeSH] OR \"Patient Harm\"[MeSH] OR (\"medical error*\"[tiab] OR \"medication error*\"[tiab] OR \"diagnostic error*\"[tiab] OR \"surgical error*\"[tiab]) OR \"patient safety\"[tiab] OR (\"never event*\"[tiab] OR \"sentinel event*\"[tiab] OR \"near miss*\"[tiab] OR \"incident report*\"[tiab] OR \"trigger tool\"[tiab]) OR \"adverse event*\"[tiab] AND (hospital*[tiab] OR inpatient*[tiab] OR \"health care\"[tiab] OR healthcare[tiab])) OR (\"Quality Improvement\"[MeSH] OR (\"quality of care\"[tiab] OR \"quality improvement\"[tiab] OR \"healthcare quality\"[tiab] OR \"health care quality\"[tiab])))",
+  "target": "QUERY",
+  "n": 60,
+  "note": "intermediate-v2 papers not in v1",
+  "drawn": "2026-11-23"
+ }
+}

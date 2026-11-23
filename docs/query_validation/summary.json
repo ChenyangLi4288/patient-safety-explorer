@@ -1,0 +1,1760 @@
+{
+ "date": "2026-11-23",
+ "sizes": {
+  "QUERY_V1": 260677,
+  "QUERY": 142053,
+  "both": 62393,
+  "added": 79660,
+  "removed": 198284
+ },
+ "calibration": {
+  "n": 947,
+  "n_safety": 417,
+  "QUERY_V1": {
+   "recall": 0.6019184652278178,
+   "safety_hits": 251,
+   "non_safety_hits": 130
+  },
+  "QUERY": {
+   "recall": 0.9256594724220624,
+   "safety_hits": 386,
+   "non_safety_hits": 90
+  },
+  "QUERY_without_tiab_diagnostic_safety": 0.9232613908872902,
+  "components": {
+   "mesh_errors": {
+    "safety_hits": 194,
+    "unique_safety": 4,
+    "non_safety_hits": 17
+   },
+   "mesh_diagnostic_errors": {
+    "safety_hits": 11,
+    "unique_safety": 1,
+    "non_safety_hits": 0
+   },
+   "mesh_patient_safety": {
+    "safety_hits": 65,
+    "unique_safety": 2,
+    "non_safety_hits": 4
+   },
+   "mesh_iatrogenic": {
+    "safety_hits": 7,
+    "unique_safety": 0,
+    "non_safety_hits": 0
+   },
+   "mesh_safety_systems": {
+    "safety_hits": 46,
+    "unique_safety": 0,
+    "non_safety_hits": 6
+   },
+   "mesh_handoff_deterioration": {
+    "safety_hits": 2,
+    "unique_safety": 1,
+    "non_safety_hits": 1
+   },
+   "pressure_injury_falls": {
+    "safety_hits": 21,
+    "unique_safety": 7,
+    "non_safety_hits": 1
+   },
+   "hai_prevention": {
+    "safety_hits": 9,
+    "unique_safety": 1,
+    "non_safety_hits": 1
+   },
+   "hit_safety": {
+    "safety_hits": 216,
+    "unique_safety": 18,
+    "non_safety_hits": 59
+   },
+   "tiab_medical_error": {
+    "safety_hits": 122,
+    "unique_safety": 2,
+    "non_safety_hits": 16
+   },
+   "tiab_patient_safety": {
+    "safety_hits": 117,
+    "unique_safety": 4,
+    "non_safety_hits": 11
+   },
+   "tiab_incidents": {
+    "safety_hits": 27,
+    "unique_safety": 0,
+    "non_safety_hits": 2
+   },
+   "tiab_ade": {
+    "safety_hits": 161,
+    "unique_safety": 23,
+    "non_safety_hits": 15
+   },
+   "tiab_error_types": {
+    "safety_hits": 52,
+    "unique_safety": 1,
+    "non_safety_hits": 4
+   },
+   "tiab_alerts": {
+    "safety_hits": 60,
+    "unique_safety": 0,
+    "non_safety_hits": 6
+   },
+   "tiab_culture": {
+    "safety_hits": 13,
+    "unique_safety": 0,
+    "non_safety_hits": 1
+   },
+   "tiab_measurement": {
+    "safety_hits": 45,
+    "unique_safety": 4,
+    "non_safety_hits": 2
+   },
+   "tiab_diagnostic_safety": {
+    "safety_hits": 3,
+    "unique_safety": 1,
+    "non_safety_hits": 3
+   },
+   "tiab_rapid_response": {
+    "safety_hits": 3,
+    "unique_safety": 2,
+    "non_safety_hits": 2
+   },
+   "tiab_handoff": {
+    "safety_hits": 0,
+    "unique_safety": 0,
+    "non_safety_hits": 0
+   },
+   "malpractice_claims": {
+    "safety_hits": 6,
+    "unique_safety": 0,
+    "non_safety_hits": 0
+   },
+   "quality_improvement_safety": {
+    "safety_hits": 6,
+    "unique_safety": 0,
+    "non_safety_hits": 6
+   }
+  },
+  "missed": [
+   {
+    "pmid": "11229835",
+    "title": "Mortality and costs of acute renal failure associated with amphotericin B therapy."
+   },
+   {
+    "pmid": "11576359",
+    "title": "Correlates of acute renal failure in patients receiving parenteral amphotericin B."
+   },
+   {
+    "pmid": "14668935",
+    "title": "Clinical impact of drug-drug interactions with systemic azole antifungals."
+   },
+   {
+    "pmid": "15061740",
+    "title": "Communication factors in the follow-up of abnormal mammograms."
+   },
+   {
+    "pmid": "16638948",
+    "title": "Ability of practitioners to identify solid oral dosage tablets."
+   },
+   {
+    "pmid": "17068354",
+    "title": "A pragmatic approach to implementing best practices for clinical decision support systems in computerized provider order entry systems."
+   },
+   {
+    "pmid": "17149499",
+    "title": "Impact of CPOE on mortality rates--contradictory findings, important messages."
+   },
+   {
+    "pmid": "17828035",
+    "title": "Costs of adverse events in intensive care units."
+   },
+   {
+    "pmid": "18436905",
+    "title": "A randomized trial of electronic clinical reminders to improve medication laboratory monitoring."
+   },
+   {
+    "pmid": "19388724",
+    "title": "Iatrogenic effects of COX-2 inhibitors in the US population: findings from the Medical Expenditure Panel Survey."
+   },
+   {
+    "pmid": "22017784",
+    "title": "Risk of thiazide-induced hyponatremia in patients with hypertension."
+   },
+   {
+    "pmid": "22268214",
+    "title": "Design and implementation of an automated email notification system for results of tests pending at discharge."
+   },
+   {
+    "pmid": "22525363",
+    "title": "Use of hepatotoxic drugs in chronic liver disease."
+   },
+   {
+    "pmid": "23184857",
+    "title": "Improving hospital venous thromboembolism prophylaxis with electronic decision support."
+   },
+   {
+    "pmid": "23401887",
+    "title": "Supratherapeutic dosing of acetaminophen among hospitalized patients."
+   },
+   {
+    "pmid": "29295464",
+    "title": "Methods for Detecting Malfunctions in Clinical Decision Support Systems."
+   },
+   {
+    "pmid": "30821822",
+    "title": "Comparative Accuracy of Diagnosis by Collective Intelligence of Multiple Physicians vs Individual Physicians."
+   },
+   {
+    "pmid": "31524923",
+    "title": "Clinician Experience of Electronic Health Record Configurations Displaying 1 vs 4 Records at a Time."
+   },
+   {
+    "pmid": "31745521",
+    "title": "Project RedDE: Cluster Randomized Trial to Reduce Missed or Delayed Abnormal Laboratory Value Actions."
+   },
+   {
+    "pmid": "32769419",
+    "title": "Expert Consensus on Currently Accepted Measures of Harm."
+   },
+   {
+    "pmid": "34978470",
+    "title": "What counts as a voiceable concern in decisions about speaking out in hospitals: A qualitative study."
+   },
+   {
+    "pmid": "35066565",
+    "title": "\"What's in a name?\" Identification of newborn infants at birth using their given names."
+   },
+   {
+    "pmid": "35308954",
+    "title": "Testing of a Risk-Standardized Complication Rate Electronic Clinical Quality Measure (eCQM) for Total Hip and/or Total Knee Arthroplasty."
+   },
+   {
+    "pmid": "35308961",
+    "title": "Testing of a Risk-Standardized Major Bleeding and Venous Thromboembolism Electronic Clinical Quality Measure for Elective Total Hip and/or Knee Arthroplasties."
+   },
+   {
+    "pmid": "35575780",
+    "title": "Usability of a perioperative medication-related clinical decision support software application: a randomized controlled trial."
+   },
+   {
+    "pmid": "36367740",
+    "title": "Electronic Health Record Legal Settlements in the US Since the 2009 Health Information Technology for Economic and Clinical Health Act."
+   },
+   {
+    "pmid": "36529027",
+    "title": "Dynamic reaction picklist for improving allergy reaction documentation: A usability study."
+   },
+   {
+    "pmid": "38883706",
+    "title": "Multisite Pragmatic Cluster-Randomized Controlled Trial of the CONCERN Early Warning System."
+   },
+   {
+    "pmid": "39293648",
+    "title": "Patient-Clinician Diagnostic Concordance upon Hospital Admission."
+   },
+   {
+    "pmid": "42457485",
+    "title": "Informing the Measurement of Timely Follow-Up on Inconclusive or Abnormal Screening Mammograms: An Environmental Scan."
+   },
+   {
+    "pmid": "42618854",
+    "title": "Informing Measurement of Timely Follow-up Colonoscopies After Positive Stool Tests for Two-Step Colorectal Cancer Screening: An Environmental Scan."
+   }
+  ]
+ },
+ "holdout": {
+  "n": 424,
+  "n_safety": 267,
+  "QUERY_V1": {
+   "recall": 0.5056179775280899,
+   "safety_hits": 135,
+   "non_safety_hits": 41
+  },
+  "QUERY": {
+   "recall": 0.8689138576779026,
+   "safety_hits": 232,
+   "non_safety_hits": 48
+  },
+  "QUERY_without_tiab_diagnostic_safety": 0.8239700374531835,
+  "components": {
+   "mesh_errors": {
+    "safety_hits": 41,
+    "unique_safety": 2,
+    "non_safety_hits": 2
+   },
+   "mesh_diagnostic_errors": {
+    "safety_hits": 80,
+    "unique_safety": 1,
+    "non_safety_hits": 7
+   },
+   "mesh_patient_safety": {
+    "safety_hits": 57,
+    "unique_safety": 1,
+    "non_safety_hits": 2
+   },
+   "mesh_iatrogenic": {
+    "safety_hits": 0,
+    "unique_safety": 0,
+    "non_safety_hits": 0
+   },
+   "mesh_safety_systems": {
+    "safety_hits": 19,
+    "unique_safety": 0,
+    "non_safety_hits": 2
+   },
+   "mesh_handoff_deterioration": {
+    "safety_hits": 1,
+    "unique_safety": 0,
+    "non_safety_hits": 1
+   },
+   "pressure_injury_falls": {
+    "safety_hits": 1,
+    "unique_safety": 0,
+    "non_safety_hits": 0
+   },
+   "hai_prevention": {
+    "safety_hits": 0,
+    "unique_safety": 0,
+    "non_safety_hits": 0
+   },
+   "hit_safety": {
+    "safety_hits": 83,
+    "unique_safety": 6,
+    "non_safety_hits": 19
+   },
+   "tiab_medical_error": {
+    "safety_hits": 126,
+    "unique_safety": 6,
+    "non_safety_hits": 20
+   },
+   "tiab_patient_safety": {
+    "safety_hits": 108,
+    "unique_safety": 2,
+    "non_safety_hits": 12
+   },
+   "tiab_incidents": {
+    "safety_hits": 15,
+    "unique_safety": 0,
+    "non_safety_hits": 0
+   },
+   "tiab_ade": {
+    "safety_hits": 12,
+    "unique_safety": 1,
+    "non_safety_hits": 1
+   },
+   "tiab_error_types": {
+    "safety_hits": 10,
+    "unique_safety": 1,
+    "non_safety_hits": 0
+   },
+   "tiab_alerts": {
+    "safety_hits": 1,
+    "unique_safety": 0,
+    "non_safety_hits": 1
+   },
+   "tiab_culture": {
+    "safety_hits": 15,
+    "unique_safety": 0,
+    "non_safety_hits": 1
+   },
+   "tiab_measurement": {
+    "safety_hits": 89,
+    "unique_safety": 6,
+    "non_safety_hits": 11
+   },
+   "tiab_diagnostic_safety": {
+    "safety_hits": 57,
+    "unique_safety": 12,
+    "non_safety_hits": 5
+   },
+   "tiab_rapid_response": {
+    "safety_hits": 3,
+    "unique_safety": 2,
+    "non_safety_hits": 0
+   },
+   "tiab_handoff": {
+    "safety_hits": 7,
+    "unique_safety": 0,
+    "non_safety_hits": 1
+   },
+   "malpractice_claims": {
+    "safety_hits": 11,
+    "unique_safety": 0,
+    "non_safety_hits": 0
+   },
+   "quality_improvement_safety": {
+    "safety_hits": 13,
+    "unique_safety": 0,
+    "non_safety_hits": 1
+   }
+  },
+  "missed": [
+   {
+    "pmid": "12512238",
+    "title": "High rates of adverse effects and patient unawareness of withdrawn lipid-lowering drug combination in a public hospital clinic."
+   },
+   {
+    "pmid": "16779358",
+    "title": "Implementing renal impairment and geriatric decision support in ambulatory e-prescribing."
+   },
+   {
+    "pmid": "18999233",
+    "title": "Linking test ordering with order tracking: closing the loop in ambulatory care."
+   },
+   {
+    "pmid": "19293786",
+    "title": "Using a multifaceted approach to improve the follow-up of positive fecal occult blood test results."
+   },
+   {
+    "pmid": "19568149",
+    "title": "Missed and delayed diagnosis of dementia in primary care: prevalence and contributing factors."
+   },
+   {
+    "pmid": "19786677",
+    "title": "Timely follow-up of abnormal diagnostic imaging test results in an outpatient setting: are electronic medical records achieving their potential?"
+   },
+   {
+    "pmid": "20584706",
+    "title": "Reducing referral delays in colorectal cancer diagnosis: is it about how you ask?"
+   },
+   {
+    "pmid": "20848235",
+    "title": "Follow-up actions on electronic referral communication in a multispecialty outpatient setting."
+   },
+   {
+    "pmid": "20959322",
+    "title": "A new sociotechnical model for studying health information technology in complex adaptive healthcare systems."
+   },
+   {
+    "pmid": "21278102",
+    "title": "Actionable reminders did not improve performance over passive reminders for overdue tests in the primary care setting."
+   },
+   {
+    "pmid": "21670331",
+    "title": "Principles of conservative prescribing."
+   },
+   {
+    "pmid": "23011072",
+    "title": "Postreferral colonoscopy delays in diagnosis of colorectal cancer: a mixed-methods analysis."
+   },
+   {
+    "pmid": "23979070",
+    "title": "Physicians' diagnostic accuracy, confidence, and resource requests: a vignette study."
+   },
+   {
+    "pmid": "26577421",
+    "title": "Losing weights: Failure to recognize and act on weight loss documented in an electronic health record."
+   },
+   {
+    "pmid": "27390378",
+    "title": "Communicating Findings of Delayed Diagnostic Evaluation to Primary Care Providers."
+   },
+   {
+    "pmid": "28095409",
+    "title": "Sick Children Crying for Help: Fostering Adverse Event Reports."
+   },
+   {
+    "pmid": "29169843",
+    "title": "Diagnostic evaluation of patients presenting with hematuria: An electronic health record-based study."
+   },
+   {
+    "pmid": "29489926",
+    "title": "Interventions to Improve Follow-Up of Laboratory Test Results Pending at Discharge: A Systematic Review."
+   },
+   {
+    "pmid": "30679055",
+    "title": "Missed Diagnosis of New-Onset Systolic Heart Failure at First Presentation in Children with No Known Heart Disease."
+   },
+   {
+    "pmid": "31128821",
+    "title": "Barriers and facilitators impacting reliability of the electronic health record-facilitated total testing process."
+   },
+   {
+    "pmid": "31745503",
+    "title": "Cluster Randomized Trial Reducing Missed Elevated Blood Pressure in Pediatric Primary Care: Project RedDE."
+   },
+   {
+    "pmid": "31745520",
+    "title": "Increasing Recognition and Diagnosis of Adolescent Depression: Project RedDE: A Cluster Randomized Trial."
+   },
+   {
+    "pmid": "32150270",
+    "title": "Factors Associated With Potentially Missed Diagnosis of Appendicitis in the Emergency Department."
+   },
+   {
+    "pmid": "34949121",
+    "title": "Laboratory monitoring to reduce adverse drug-related events: a mixed methods study."
+   },
+   {
+    "pmid": "35452111",
+    "title": "Adherence to National Guidelines for Timeliness of Test Results Communication to Patients in the Veterans Affairs Health Care System."
+   },
+   {
+    "pmid": "36414802",
+    "title": "Closing the Loop: Re-engineering the Assessment and Tracking of Symptoms in Primary Care."
+   },
+   {
+    "pmid": "36990482",
+    "title": "Effects of a computerised diagnostic decision support tool on diagnostic quality in emergency departments: study protocol of the DDx-BRO multicentre cluster randomised cross-over trial."
+   },
+   {
+    "pmid": "37147090",
+    "title": "How does work environment relate to diagnostic quality? A prospective, mixed methods study in primary care."
+   },
+   {
+    "pmid": "38718321",
+    "title": "Development and Implementation of a Digital Quality Measure of Emergency Cancer Diagnosis."
+   },
+   {
+    "pmid": "39242070",
+    "title": "Incidence, Recognition, and Follow-up of Laboratory Evidence of Acute Kidney Injury in Primary Care Practices: Analysis of 93,259 Creatinine Results."
+   },
+   {
+    "pmid": "39602298",
+    "title": "Recommendations to Ensure Safety of AI in Real-World Clinical Care."
+   },
+   {
+    "pmid": "41027729",
+    "title": "Digital quality measure of potentially avoidable emergency presentations among patients with colorectal cancer."
+   },
+   {
+    "pmid": "41691061",
+    "title": "A digital quality measure for emergency presentation of pancreatic cancer."
+   },
+   {
+    "pmid": "42342478",
+    "title": "Symptom Tracking in Primary Care: Designing and Testing an EHR-Embedded Safety-Net System."
+   },
+   {
+    "pmid": "42469150",
+    "title": "A Framework to Characterize the Costs of Delayed Diagnoses."
+   }
+  ]
+ },
+ "precision": {
+  "v1_corpus": {
+   "target": "QUERY_V1",
+   "n": 150,
+   "Y": 35,
+   "YB": 41,
+   "strict": [
+    0.23333333333333334,
+    0.17282533850374257,
+    0.3071592690406407
+   ],
+   "lenient": [
+    0.2733333333333333,
+    0.20834036087778668,
+    0.3496465555349391
+   ]
+  },
+  "v1:tiab_quality_of_care": {
+   "target": null,
+   "n": 50,
+   "Y": 2,
+   "YB": 6,
+   "strict": [
+    0.04,
+    0.011038652660826577,
+    0.13460337877954667
+   ],
+   "lenient": [
+    0.12,
+    0.05617523710624646,
+    0.23805078886623582
+   ]
+  },
+  "v1:mesh_quality_improvement": {
+   "target": null,
+   "n": 50,
+   "Y": 3,
+   "YB": 7,
+   "strict": [
+    0.06,
+    0.020614596364630478,
+    0.16217343370877002
+   ],
+   "lenient": [
+    0.14,
+    0.06950745262022862,
+    0.2618645719852809
+   ]
+  },
+  "v1:tiab_adverse_event": {
+   "target": null,
+   "n": 50,
+   "Y": 6,
+   "YB": 10,
+   "strict": [
+    0.12,
+    0.05617523710624646,
+    0.23805078886623582
+   ],
+   "lenient": [
+    0.2,
+    0.11243629945973886,
+    0.3303737210448524
+   ]
+  },
+  "v1:tiab_medical_error": {
+   "target": "tiab_medical_error",
+   "n": 20,
+   "Y": 14,
+   "YB": 15,
+   "strict": [
+    0.7,
+    0.4810232237710206,
+    0.854524726031006
+   ],
+   "lenient": [
+    0.75,
+    0.5312949900419365,
+    0.888139947210597
+   ]
+  },
+  "v1:tiab_patient_safety": {
+   "target": null,
+   "n": 20,
+   "Y": 9,
+   "YB": 11,
+   "strict": [
+    0.45,
+    0.25819502085709295,
+    0.6579179916924003
+   ],
+   "lenient": [
+    0.55,
+    0.3420820083075997,
+    0.7418049791429071
+   ]
+  },
+  "v1:tiab_never_event": {
+   "target": null,
+   "n": 20,
+   "Y": 8,
+   "YB": 10,
+   "strict": [
+    0.4,
+    0.21880396741419272,
+    0.613422057684794
+   ],
+   "lenient": [
+    0.5,
+    0.2992949144298199,
+    0.7007050855701801
+   ]
+  },
+  "v1:mesh_iatrogenic": {
+   "target": null,
+   "n": 20,
+   "Y": 8,
+   "YB": 11,
+   "strict": [
+    0.4,
+    0.21880396741419272,
+    0.613422057684794
+   ],
+   "lenient": [
+    0.55,
+    0.3420820083075997,
+    0.7418049791429071
+   ]
+  },
+  "cand:mesh_errors_minus_test_accuracy": {
+   "target": null,
+   "n": 20,
+   "Y": 11,
+   "YB": 14,
+   "strict": [
+    0.55,
+    0.3420820083075997,
+    0.7418049791429071
+   ],
+   "lenient": [
+    0.7,
+    0.4810232237710206,
+    0.854524726031006
+   ]
+  },
+  "cand:mesh_test_accuracy_only": {
+   "target": null,
+   "n": 20,
+   "Y": 0,
+   "YB": 0,
+   "strict": [
+    0.0,
+    0.0,
+    0.16113012549493322
+   ],
+   "lenient": [
+    0.0,
+    0.0,
+    0.16113012549493322
+   ]
+  },
+  "cand:mesh_delayed_diagnosis": {
+   "target": null,
+   "n": 20,
+   "Y": 2,
+   "YB": 4,
+   "strict": [
+    0.1,
+    0.027865893984153206,
+    0.30103820641179335
+   ],
+   "lenient": [
+    0.2,
+    0.0806563532712,
+    0.41602172202575993
+   ]
+  },
+  "cand:mesh_patient_safety": {
+   "target": "mesh_patient_safety",
+   "n": 20,
+   "Y": 10,
+   "YB": 15,
+   "strict": [
+    0.5,
+    0.2992949144298199,
+    0.7007050855701801
+   ],
+   "lenient": [
+    0.75,
+    0.5312949900419365,
+    0.888139947210597
+   ]
+  },
+  "cand:mesh_safety_mgmt_care": {
+   "target": "mesh_safety_systems",
+   "n": 20,
+   "Y": 12,
+   "YB": 16,
+   "strict": [
+    0.6,
+    0.3865779423152061,
+    0.7811960325858074
+   ],
+   "lenient": [
+    0.8,
+    0.5839782779742401,
+    0.9193436467288
+   ]
+  },
+  "cand:mesh_rca": {
+   "target": "mesh_safety_systems",
+   "n": 20,
+   "Y": 13,
+   "YB": 17,
+   "strict": [
+    0.65,
+    0.43285051021946463,
+    0.8188104521320554
+   ],
+   "lenient": [
+    0.85,
+    0.6395767041130426,
+    0.9476322080405041
+   ]
+  },
+  "cand:mesh_malpractice": {
+   "target": null,
+   "n": 20,
+   "Y": 2,
+   "YB": 9,
+   "strict": [
+    0.1,
+    0.027865893984153206,
+    0.30103820641179335
+   ],
+   "lenient": [
+    0.45,
+    0.25819502085709295,
+    0.6579179916924003
+   ]
+  },
+  "cand:mesh_disclosure_err": {
+   "target": "mesh_safety_systems",
+   "n": 20,
+   "Y": 14,
+   "YB": 14,
+   "strict": [
+    0.7,
+    0.4810232237710206,
+    0.854524726031006
+   ],
+   "lenient": [
+    0.7,
+    0.4810232237710206,
+    0.854524726031006
+   ]
+  },
+  "cand:mesh_cross_infection_prev": {
+   "target": "hai_prevention",
+   "n": 18,
+   "Y": 13,
+   "YB": 18,
+   "strict": [
+    0.7222222222222222,
+    0.49126922453805477,
+    0.8750043085364452
+   ],
+   "lenient": [
+    1.0,
+    0.8241154494176252,
+    1.0
+   ]
+  },
+  "cand:mesh_falls_care": {
+   "target": null,
+   "n": 20,
+   "Y": 5,
+   "YB": 9,
+   "strict": [
+    0.25,
+    0.11186005278940309,
+    0.4687050099580636
+   ],
+   "lenient": [
+    0.45,
+    0.25819502085709295,
+    0.6579179916924003
+   ]
+  },
+  "cand:mesh_pressure_care": {
+   "target": "pressure_injury_falls",
+   "n": 20,
+   "Y": 13,
+   "YB": 16,
+   "strict": [
+    0.65,
+    0.43285051021946463,
+    0.8188104521320554
+   ],
+   "lenient": [
+    0.8,
+    0.5839782779742401,
+    0.9193436467288
+   ]
+  },
+  "cand:mesh_deterioration_rrt": {
+   "target": "mesh_handoff_deterioration",
+   "n": 20,
+   "Y": 12,
+   "YB": 16,
+   "strict": [
+    0.6,
+    0.3865779423152061,
+    0.7811960325858074
+   ],
+   "lenient": [
+    0.8,
+    0.5839782779742401,
+    0.9193436467288
+   ]
+  },
+  "cand:mesh_handoff": {
+   "target": "mesh_handoff_deterioration",
+   "n": 20,
+   "Y": 18,
+   "YB": 18,
+   "strict": [
+    0.9,
+    0.6989617935882066,
+    0.9721341060158468
+   ],
+   "lenient": [
+    0.9,
+    0.6989617935882066,
+    0.9721341060158468
+   ]
+  },
+  "cand:mesh_cpoe_cds_safety": {
+   "target": null,
+   "n": 20,
+   "Y": 6,
+   "YB": 12,
+   "strict": [
+    0.3,
+    0.14547527396899385,
+    0.5189767762289793
+   ],
+   "lenient": [
+    0.6,
+    0.3865779423152061,
+    0.7811960325858074
+   ]
+  },
+  "cand:mesh_adr_majr_care": {
+   "target": null,
+   "n": 20,
+   "Y": 5,
+   "YB": 10,
+   "strict": [
+    0.25,
+    0.11186005278940309,
+    0.4687050099580636
+   ],
+   "lenient": [
+    0.5,
+    0.2992949144298199,
+    0.7007050855701801
+   ]
+  },
+  "cand:mesh_adr_reporting": {
+   "target": null,
+   "n": 20,
+   "Y": 3,
+   "YB": 6,
+   "strict": [
+    0.15,
+    0.05236779195949584,
+    0.36042329588695743
+   ],
+   "lenient": [
+    0.3,
+    0.14547527396899385,
+    0.5189767762289793
+   ]
+  },
+  "cand:mesh_qi_safety_ind": {
+   "target": null,
+   "n": 20,
+   "Y": 3,
+   "YB": 6,
+   "strict": [
+    0.15,
+    0.05236779195949584,
+    0.36042329588695743
+   ],
+   "lenient": [
+    0.3,
+    0.14547527396899385,
+    0.5189767762289793
+   ]
+  },
+  "cand:mesh_patient_id": {
+   "target": null,
+   "n": 20,
+   "Y": 4,
+   "YB": 4,
+   "strict": [
+    0.2,
+    0.0806563532712,
+    0.41602172202575993
+   ],
+   "lenient": [
+    0.2,
+    0.0806563532712,
+    0.41602172202575993
+   ]
+  },
+  "cand:mesh_hand_hygiene": {
+   "target": "hai_prevention",
+   "n": 16,
+   "Y": 10,
+   "YB": 13,
+   "strict": [
+    0.625,
+    0.3864064709793481,
+    0.815190174452472
+   ],
+   "lenient": [
+    0.8125,
+    0.5699064013154177,
+    0.9340852122641324
+   ]
+  },
+  "cand:tiab_ade": {
+   "target": "tiab_ade",
+   "n": 20,
+   "Y": 9,
+   "YB": 14,
+   "strict": [
+    0.45,
+    0.25819502085709295,
+    0.6579179916924003
+   ],
+   "lenient": [
+    0.7,
+    0.4810232237710206,
+    0.854524726031006
+   ]
+  },
+  "cand:tiab_error_types": {
+   "target": null,
+   "n": 20,
+   "Y": 5,
+   "YB": 8,
+   "strict": [
+    0.25,
+    0.11186005278940309,
+    0.4687050099580636
+   ],
+   "lenient": [
+    0.4,
+    0.21880396741419272,
+    0.613422057684794
+   ]
+  },
+  "cand:tiab_alerts": {
+   "target": "tiab_alerts",
+   "n": 20,
+   "Y": 14,
+   "YB": 18,
+   "strict": [
+    0.7,
+    0.4810232237710206,
+    0.854524726031006
+   ],
+   "lenient": [
+    0.9,
+    0.6989617935882066,
+    0.9721341060158468
+   ]
+  },
+  "cand:tiab_hit_safety": {
+   "target": null,
+   "n": 20,
+   "Y": 6,
+   "YB": 10,
+   "strict": [
+    0.3,
+    0.14547527396899385,
+    0.5189767762289793
+   ],
+   "lenient": [
+    0.5,
+    0.2992949144298199,
+    0.7007050855701801
+   ]
+  },
+  "cand:tiab_culture_systems": {
+   "target": null,
+   "n": 20,
+   "Y": 9,
+   "YB": 12,
+   "strict": [
+    0.45,
+    0.25819502085709295,
+    0.6579179916924003
+   ],
+   "lenient": [
+    0.6,
+    0.3865779423152061,
+    0.7811960325858074
+   ]
+  },
+  "cand:tiab_measurement": {
+   "target": null,
+   "n": 20,
+   "Y": 4,
+   "YB": 7,
+   "strict": [
+    0.2,
+    0.0806563532712,
+    0.41602172202575993
+   ],
+   "lenient": [
+    0.35,
+    0.18118954786794464,
+    0.5671494897805354
+   ]
+  },
+  "cand:tiab_disclosure": {
+   "target": null,
+   "n": 20,
+   "Y": 5,
+   "YB": 5,
+   "strict": [
+    0.25,
+    0.11186005278940309,
+    0.4687050099580636
+   ],
+   "lenient": [
+    0.25,
+    0.11186005278940309,
+    0.4687050099580636
+   ]
+  },
+  "cand:tiab_diag_narrow": {
+   "target": null,
+   "n": 20,
+   "Y": 3,
+   "YB": 8,
+   "strict": [
+    0.15,
+    0.05236779195949584,
+    0.36042329588695743
+   ],
+   "lenient": [
+    0.4,
+    0.21880396741419272,
+    0.613422057684794
+   ]
+  },
+  "cand:tiab_hai": {
+   "target": "hai_prevention",
+   "n": 12,
+   "Y": 9,
+   "YB": 11,
+   "strict": [
+    0.75,
+    0.46768966087934005,
+    0.9110599603710386
+   ],
+   "lenient": [
+    0.9166666666666666,
+    0.6461140782014047,
+    0.9851352905492264
+   ]
+  },
+  "cand:tiab_hosp_acquired": {
+   "target": null,
+   "n": 20,
+   "Y": 8,
+   "YB": 12,
+   "strict": [
+    0.4,
+    0.21880396741419272,
+    0.613422057684794
+   ],
+   "lenient": [
+    0.6,
+    0.3865779423152061,
+    0.7811960325858074
+   ]
+  },
+  "cand:tiab_deterioration": {
+   "target": null,
+   "n": 20,
+   "Y": 3,
+   "YB": 5,
+   "strict": [
+    0.15,
+    0.05236779195949584,
+    0.36042329588695743
+   ],
+   "lenient": [
+    0.25,
+    0.11186005278940309,
+    0.4687050099580636
+   ]
+  },
+  "cand:tiab_handoff": {
+   "target": null,
+   "n": 20,
+   "Y": 8,
+   "YB": 13,
+   "strict": [
+    0.4,
+    0.21880396741419272,
+    0.613422057684794
+   ],
+   "lenient": [
+    0.65,
+    0.43285051021946463,
+    0.8188104521320554
+   ]
+  },
+  "cand:tiab_malpractice": {
+   "target": null,
+   "n": 20,
+   "Y": 3,
+   "YB": 8,
+   "strict": [
+    0.15,
+    0.05236779195949584,
+    0.36042329588695743
+   ],
+   "lenient": [
+    0.4,
+    0.21880396741419272,
+    0.613422057684794
+   ]
+  },
+  "cand:tiab_overdose_care": {
+   "target": null,
+   "n": 20,
+   "Y": 3,
+   "YB": 5,
+   "strict": [
+    0.15,
+    0.05236779195949584,
+    0.36042329588695743
+   ],
+   "lenient": [
+    0.25,
+    0.11186005278940309,
+    0.4687050099580636
+   ]
+  },
+  "cand:tiab_ae_narrow": {
+   "target": null,
+   "n": 20,
+   "Y": 5,
+   "YB": 8,
+   "strict": [
+    0.25,
+    0.11186005278940309,
+    0.4687050099580636
+   ],
+   "lenient": [
+    0.4,
+    0.21880396741419272,
+    0.613422057684794
+   ]
+  },
+  "cand:q_qi_mesh_safe": {
+   "target": null,
+   "n": 20,
+   "Y": 5,
+   "YB": 9,
+   "strict": [
+    0.25,
+    0.11186005278940309,
+    0.4687050099580636
+   ],
+   "lenient": [
+    0.45,
+    0.25819502085709295,
+    0.6579179916924003
+   ]
+  },
+  "cand:q_qi_tiab_safe": {
+   "target": null,
+   "n": 20,
+   "Y": 7,
+   "YB": 10,
+   "strict": [
+    0.35,
+    0.18118954786794464,
+    0.5671494897805354
+   ],
+   "lenient": [
+    0.5,
+    0.2992949144298199,
+    0.7007050855701801
+   ]
+  },
+  "cand:q_qi_majr": {
+   "target": null,
+   "n": 20,
+   "Y": 0,
+   "YB": 1,
+   "strict": [
+    0.0,
+    0.0,
+    0.16113012549493322
+   ],
+   "lenient": [
+    0.05,
+    0.008881219432873136,
+    0.23613589351256675
+   ]
+  },
+  "cand:v2_mesh_med_errors": {
+   "target": null,
+   "n": 20,
+   "Y": 16,
+   "YB": 18,
+   "strict": [
+    0.8,
+    0.5839782779742401,
+    0.9193436467288
+   ],
+   "lenient": [
+    0.9,
+    0.6989617935882066,
+    0.9721341060158468
+   ]
+  },
+  "cand:v2_mesh_diag_errors": {
+   "target": null,
+   "n": 20,
+   "Y": 4,
+   "YB": 8,
+   "strict": [
+    0.2,
+    0.0806563532712,
+    0.41602172202575993
+   ],
+   "lenient": [
+    0.4,
+    0.21880396741419272,
+    0.613422057684794
+   ]
+  },
+  "cand:v2_mesh_iatrogenic_noexp": {
+   "target": null,
+   "n": 20,
+   "Y": 7,
+   "YB": 12,
+   "strict": [
+    0.35,
+    0.18118954786794464,
+    0.5671494897805354
+   ],
+   "lenient": [
+    0.6,
+    0.3865779423152061,
+    0.7811960325858074
+   ]
+  },
+  "cand:v2_mesh_safety_systems": {
+   "target": "mesh_safety_systems",
+   "n": 20,
+   "Y": 14,
+   "YB": 16,
+   "strict": [
+    0.7,
+    0.4810232237710206,
+    0.854524726031006
+   ],
+   "lenient": [
+    0.8,
+    0.5839782779742401,
+    0.9193436467288
+   ]
+  },
+  "cand:v2_mesh_handoff_rrt": {
+   "target": "mesh_handoff_deterioration",
+   "n": 20,
+   "Y": 13,
+   "YB": 18,
+   "strict": [
+    0.65,
+    0.43285051021946463,
+    0.8188104521320554
+   ],
+   "lenient": [
+    0.9,
+    0.6989617935882066,
+    0.9721341060158468
+   ]
+  },
+  "cand:v2_pressure_falls": {
+   "target": "pressure_injury_falls",
+   "n": 20,
+   "Y": 12,
+   "YB": 15,
+   "strict": [
+    0.6,
+    0.3865779423152061,
+    0.7811960325858074
+   ],
+   "lenient": [
+    0.75,
+    0.5312949900419365,
+    0.888139947210597
+   ]
+  },
+  "cand:v2_hai": {
+   "target": "hai_prevention",
+   "n": 20,
+   "Y": 11,
+   "YB": 17,
+   "strict": [
+    0.55,
+    0.3420820083075997,
+    0.7418049791429071
+   ],
+   "lenient": [
+    0.85,
+    0.6395767041130426,
+    0.9476322080405041
+   ]
+  },
+  "cand:v2_hit_safety": {
+   "target": "hit_safety",
+   "n": 20,
+   "Y": 8,
+   "YB": 13,
+   "strict": [
+    0.4,
+    0.21880396741419272,
+    0.613422057684794
+   ],
+   "lenient": [
+    0.65,
+    0.43285051021946463,
+    0.8188104521320554
+   ]
+  },
+  "cand:v2_tiab_patient_safety_ctx": {
+   "target": "tiab_patient_safety",
+   "n": 20,
+   "Y": 15,
+   "YB": 18,
+   "strict": [
+    0.75,
+    0.5312949900419365,
+    0.888139947210597
+   ],
+   "lenient": [
+    0.9,
+    0.6989617935882066,
+    0.9721341060158468
+   ]
+  },
+  "cand:v2_tiab_incidents": {
+   "target": "tiab_incidents",
+   "n": 20,
+   "Y": 11,
+   "YB": 16,
+   "strict": [
+    0.55,
+    0.3420820083075997,
+    0.7418049791429071
+   ],
+   "lenient": [
+    0.8,
+    0.5839782779742401,
+    0.9193436467288
+   ]
+  },
+  "cand:v2_tiab_error_types": {
+   "target": "tiab_error_types",
+   "n": 19,
+   "Y": 8,
+   "YB": 14,
+   "strict": [
+    0.42105263157894735,
+    0.2314162039203038,
+    0.6372444853483988
+   ],
+   "lenient": [
+    0.7368421052631579,
+    0.5120803155892935,
+    0.8819376166045982
+   ]
+  },
+  "cand:v2_tiab_culture": {
+   "target": "tiab_culture",
+   "n": 14,
+   "Y": 9,
+   "YB": 14,
+   "strict": [
+    0.6428571428571429,
+    0.3876400468214042,
+    0.8365550926279727
+   ],
+   "lenient": [
+    1.0,
+    0.7846829880728186,
+    1.0
+   ]
+  },
+  "cand:v2_tiab_measurement": {
+   "target": "tiab_measurement",
+   "n": 20,
+   "Y": 13,
+   "YB": 15,
+   "strict": [
+    0.65,
+    0.43285051021946463,
+    0.8188104521320554
+   ],
+   "lenient": [
+    0.75,
+    0.5312949900419365,
+    0.888139947210597
+   ]
+  },
+  "cand:v2_tiab_rrt": {
+   "target": "tiab_rapid_response",
+   "n": 20,
+   "Y": 11,
+   "YB": 15,
+   "strict": [
+    0.55,
+    0.3420820083075997,
+    0.7418049791429071
+   ],
+   "lenient": [
+    0.75,
+    0.5312949900419365,
+    0.888139947210597
+   ]
+  },
+  "cand:v2_tiab_handoff": {
+   "target": "tiab_handoff",
+   "n": 20,
+   "Y": 11,
+   "YB": 15,
+   "strict": [
+    0.55,
+    0.3420820083075997,
+    0.7418049791429071
+   ],
+   "lenient": [
+    0.75,
+    0.5312949900419365,
+    0.888139947210597
+   ]
+  },
+  "cand:v2_malpractice_claims": {
+   "target": null,
+   "n": 20,
+   "Y": 5,
+   "YB": 11,
+   "strict": [
+    0.25,
+    0.11186005278940309,
+    0.4687050099580636
+   ],
+   "lenient": [
+    0.55,
+    0.3420820083075997,
+    0.7418049791429071
+   ]
+  },
+  "cand:v2_adr_care": {
+   "target": null,
+   "n": 20,
+   "Y": 8,
+   "YB": 13,
+   "strict": [
+    0.4,
+    0.21880396741419272,
+    0.613422057684794
+   ],
+   "lenient": [
+    0.65,
+    0.43285051021946463,
+    0.8188104521320554
+   ]
+  },
+  "cand:v2_q_qi_safe": {
+   "target": null,
+   "n": 20,
+   "Y": 11,
+   "YB": 14,
+   "strict": [
+    0.55,
+    0.3420820083075997,
+    0.7418049791429071
+   ],
+   "lenient": [
+    0.7,
+    0.4810232237710206,
+    0.854524726031006
+   ]
+  },
+  "cand:v2f_mesh_diag_errors": {
+   "target": "mesh_diagnostic_errors",
+   "n": 20,
+   "Y": 13,
+   "YB": 16,
+   "strict": [
+    0.65,
+    0.43285051021946463,
+    0.8188104521320554
+   ],
+   "lenient": [
+    0.8,
+    0.5839782779742401,
+    0.9193436467288
+   ]
+  },
+  "cand:v2f_mesh_iatrogenic": {
+   "target": "mesh_iatrogenic",
+   "n": 20,
+   "Y": 9,
+   "YB": 15,
+   "strict": [
+    0.45,
+    0.25819502085709295,
+    0.6579179916924003
+   ],
+   "lenient": [
+    0.75,
+    0.5312949900419365,
+    0.888139947210597
+   ]
+  },
+  "cand:v2f_malpractice": {
+   "target": "malpractice_claims",
+   "n": 20,
+   "Y": 15,
+   "YB": 17,
+   "strict": [
+    0.75,
+    0.5312949900419365,
+    0.888139947210597
+   ],
+   "lenient": [
+    0.85,
+    0.6395767041130426,
+    0.9476322080405041
+   ]
+  },
+  "cand:v3_q_qi_safe": {
+   "target": "quality_improvement_safety",
+   "n": 20,
+   "Y": 10,
+   "YB": 15,
+   "strict": [
+    0.5,
+    0.2992949144298199,
+    0.7007050855701801
+   ],
+   "lenient": [
+    0.75,
+    0.5312949900419365,
+    0.888139947210597
+   ]
+  },
+  "cand:v3_hai": {
+   "target": "hai_prevention",
+   "n": 20,
+   "Y": 11,
+   "YB": 15,
+   "strict": [
+    0.55,
+    0.3420820083075997,
+    0.7418049791429071
+   ],
+   "lenient": [
+    0.75,
+    0.5312949900419365,
+    0.888139947210597
+   ]
+  },
+  "cand:v3_mesh_med_errors": {
+   "target": "mesh_errors",
+   "n": 20,
+   "Y": 15,
+   "YB": 20,
+   "strict": [
+    0.75,
+    0.5312949900419365,
+    0.888139947210597
+   ],
+   "lenient": [
+    1.0,
+    0.8388698745050667,
+    1.0
+   ]
+  },
+  "cand:v4_tiab_diag_safety": {
+   "target": null,
+   "n": 20,
+   "Y": 1,
+   "YB": 2,
+   "strict": [
+    0.05,
+    0.008881219432873136,
+    0.23613589351256675
+   ],
+   "lenient": [
+    0.1,
+    0.027865893984153206,
+    0.30103820641179335
+   ]
+  },
+  "cand:v5_tiab_diag_safety": {
+   "target": "tiab_diagnostic_safety",
+   "n": 20,
+   "Y": 6,
+   "YB": 12,
+   "strict": [
+    0.3,
+    0.14547527396899385,
+    0.5189767762289793
+   ],
+   "lenient": [
+    0.6,
+    0.3865779423152061,
+    0.7811960325858074
+   ]
+  },
+  "v2_draft_corpus": {
+   "target": "QUERY",
+   "n": 125,
+   "Y": 60,
+   "YB": 81,
+   "strict": [
+    0.48,
+    0.3943261533805731,
+    0.5668665048912894
+   ],
+   "lenient": [
+    0.648,
+    0.5610009206996934,
+    0.7261734080885242
+   ]
+  },
+  "v2_topup": {
+   "target": "QUERY",
+   "n": 25,
+   "Y": 11,
+   "YB": 15,
+   "strict": [
+    0.44,
+    0.2666537494700256,
+    0.6293298298043557
+   ],
+   "lenient": [
+    0.6,
+    0.40739127785127344,
+    0.7659694233580909
+   ]
+  },
+  "removed_v1_not_v2": {
+   "target": "QUERY_V1",
+   "n": 60,
+   "Y": 1,
+   "YB": 6,
+   "strict": [
+    0.016666666666666666,
+    0.002948083860873682,
+    0.08855338226779477
+   ],
+   "lenient": [
+    0.1,
+    0.04664219945723587,
+    0.20149694492511044
+   ]
+  },
+  "added_v2_not_v1": {
+   "target": "QUERY",
+   "n": 59,
+   "Y": 20,
+   "YB": 35,
+   "strict": [
+    0.3389830508474576,
+    0.23137483598383493,
+    0.4662776744551099
+   ],
+   "lenient": [
+    0.5932203389830508,
+    0.46593171365564306,
+    0.7091115697744415
+   ]
+  },
+  "QUERY": {
+   "n": 150,
+   "strict": [
+    0.47333333333333333,
+    0.39509757671394596,
+    0.5529008840404923
+   ],
+   "lenient": [
+    0.64,
+    0.5605726755123628,
+    0.712435405526836
+   ]
+  },
+  "QUERY_V1": {
+   "n": 150,
+   "strict": [
+    0.23333333333333334,
+    0.17282533850374257,
+    0.3071592690406407
+   ],
+   "lenient": [
+    0.2733333333333333,
+    0.20834036087778668,
+    0.3496465555349391
+   ]
+  }
+ }
+}

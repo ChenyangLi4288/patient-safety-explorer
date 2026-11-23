@@ -27,16 +27,59 @@ compute the map, and each paper links to its PubMed page.
 
 ## Corpus
 
-PubMed records with an abstract, published 2000 or later, matching any of:
+The map on the site was built from the **v1 query**. It returned 259,007 papers (29–30 October
+2026). 141 records had no abstract text, and 3,843 off-topic papers (environmental "air/water
+quality", imaging physics) were removed by hand (`drop_pmids.csv`), leaving 255,023.
 
-- MeSH: *Medical Errors*, *Patient Safety*, *Iatrogenic Disease*, *Patient Harm*, *Quality Improvement*
-- Title/abstract: medical / medication / diagnostic / surgical error; patient safety; never event,
-  sentinel event, near miss, incident report, trigger tool; adverse event together with a hospital
-  or health-care term; quality of care, quality improvement, health care quality
+**v2** (`QUERY_TERM` in `count_corpus.py`, used by `fetch_corpus.py`) replaces v1. It is aimed at
+patient-safety research specifically. It takes PubMed records with an abstract, published 2000 or
+later, that match any of 22 components:
 
-The exact query is in `count_corpus.py`. It returned 259,007 papers (retrieved 29–30 October 2026).
-141 records without abstract text were dropped, and a cluster of 3,843 off-topic papers
-(environmental "air/water quality" and imaging physics) was removed after the first map.
+- MeSH: *Medical Errors* (not exploded), *Medication Errors*, *Medication Reconciliation*, *Near Miss*;
+  *Diagnostic Errors* only together with a safety term; *Patient Safety*, *Patient Harm*;
+  *Iatrogenic Disease* as a major topic; *Safety Management* in care settings, *Root Cause Analysis*,
+  error disclosure; *Patient Handoff*, *Clinical Deterioration*, *Rapid Response Team*; pressure
+  injuries and falls in care settings; prevention of health-care-associated infections (bench
+  microbiology excluded); CPOE, decision support, e-prescribing, EHRs, smart pumps and barcoding
+  together with an error, safety, harm or alert term.
+- Title/abstract: medical, medication, diagnostic and surgical error; "patient safety" together with an
+  error, harm, incident or culture term; never and sentinel events, incident reports, trigger tools,
+  near misses; adverse drug events, medication safety, drug-related problems; specific error types
+  (prescribing, dispensing, administration, wrong-patient, wrong-site, look-alike/sound-alike,
+  retained surgical items); alert and alarm fatigue, alert overrides; safety culture and climate,
+  second victims, RCA, FMEA; harm measurement and safety indicators; test-result follow-up and missed
+  diagnostic opportunities; rapid response and failure to rescue; handoffs; malpractice claims.
+- Quality improvement, but only when QI is the main subject and a safety or harm term is present.
+
+Why v1 was replaced:
+
+1. In v1 the adverse-event term had no parentheses of its own. PubMed reads AND/OR left to right, so
+   every core term was effectively ANDed with "hospital / inpatient / health care".
+2. `"Medical Errors"[MeSH]` explodes into False Positive/Negative Reactions and Observer Variation
+   (test accuracy, inter-rater reliability). That is 48% of its hits and the source of the
+   imaging-physics papers.
+3. The quality-of-care text terms were about 4% patient-safety papers. They contributed 90% of the
+   hand-removed cluster.
+
+On 23 November 2026 v2 retrieves 142,053 papers, against 260,677 for v1. About 62,000 are in both,
+80,000 are new and 198,000 are no longer retrieved. Only 46 of the 3,843 hand-removed papers match v2.
+
+Validation (`validate_query.py`; labels and samples in `docs/query_validation/`, 95% intervals):
+
+| | v1 | v2 |
+|---|---|---|
+| Recall, Bates DW + Adelman JS papers (417 safety papers; used for tuning) | 60% | 93% |
+| Recall, hold-out Singh H / Gandhi TK / Schiff GD papers (267) | 51% | 82% (87% with the diagnostic-safety arm, added after reviewing the misses) |
+| Precision, strict (random sample of 150, title + MeSH) | 23% [17–31%] | 47% [40–55%] |
+| Precision, including borderline papers | 27% [21–35%] | 64% [56–71%] |
+
+The labelling criteria are in `validate_query.py`. In rough numbers, v1 holds about 61,000
+patient-safety papers and v2 about 67,000 (56,000–78,000). Of the papers v2 no longer retrieves,
+about 2% in a sample of 60 were patient safety, mostly infection-control papers without the
+*prevention and control* subheading.
+
+`QUERY_V1` in `fetch_corpus.py` reproduces the first map:
+`python fetch_corpus.py --query v1 --out data/raw_v1`.
 
 ## Method
 
@@ -62,8 +105,8 @@ The exact query is in `count_corpus.py`. It returned 259,007 papers (retrieved 2
 
 ```
 python -m venv .venv && .venv/Scripts/pip install torch transformers sentence-transformers umap-learn scikit-learn pandas pyarrow matplotlib adjustText
-python fetch_corpus.py        # ~2 h, network only
-python embed.py               # ~25 min on a 12 GB GPU
+python fetch_corpus.py        # ~1 h for v2 (~142k papers), network only; writes data/raw/
+python embed.py               # ~15 min for v2 on a 12 GB GPU
 python build_map.py --drop drop_pmids.csv
 python build_site.py
 python -m http.server --directory site 8000
