@@ -1,14 +1,14 @@
 # Patient Safety Literature Explorer
 
-An interactive 2D map of 255,023 PubMed papers (2000–2026) on patient safety, medical error,
-adverse events and quality of care. Each point is a paper; nearby points are papers with similar
+An interactive 2D map of 141,945 PubMed papers (2000–2026) on patient safety: medical,
+medication and diagnostic error, adverse events and harm from care, and how they are measured and prevented. Each point is a paper; nearby points are papers with similar
 titles and abstracts. Papers are grouped into 30 topics and 200 subtopics.
 
 **Live site: https://chenyangli4288.github.io/patient-safety-explorer/**
 
-![AI in patient-safety and quality-of-care research, 2005–2025](docs/ai_trend.png)
+![AI in patient-safety research, 2005–2025](docs/ai_trend.png)
 
-![Paper view](docs/screenshot.png)
+![Paper view (screenshot from the v1 map)](docs/screenshot.png)
 
 ## Features
 
@@ -27,12 +27,16 @@ compute the map, and each paper links to its PubMed page.
 
 ## Corpus
 
-The map on the site was built from the **v1 query**. It returned 259,007 papers (29–30 October
-2026). 141 records had no abstract text, and 3,843 off-topic papers (environmental "air/water
-quality", imaging physics) were removed by hand (`drop_pmids.csv`), leaving 255,023.
+The map is built from the **v2 query** (`QUERY_TERM` in `count_corpus.py`, used by
+`fetch_corpus.py`). It returned 142,049 papers (retrieved 23 November 2026). 58 records had no
+abstract text, and 46 papers on the hand-made v1 drop list (`drop_pmids.csv`) were removed,
+leaving 141,945.
 
-**v2** (`QUERY_TERM` in `count_corpus.py`, used by `fetch_corpus.py`) replaces v1. It is aimed at
-patient-safety research specifically. It takes PubMed records with an abstract, published 2000 or
+The first map (October 2026) used the **v1 query**: 259,007 papers, of which 141 had no abstract
+text and 3,843 off-topic papers (environmental "air/water quality", imaging physics) were removed
+by hand, leaving 255,023.
+
+v2 is aimed at patient-safety research specifically. It takes PubMed records with an abstract, published 2000 or
 later, that match any of 22 components:
 
 - MeSH: *Medical Errors* (not exploded), *Medication Errors*, *Medication Reconciliation*, *Near Miss*;
@@ -78,6 +82,19 @@ patient-safety papers and v2 about 67,000 (56,000–78,000). Of the papers v2 no
 about 2% in a sample of 60 were patient safety, mostly infection-control papers without the
 *prevention and control* subheading.
 
+### Off-topic subtopics
+
+A few clusters of the v2 map are off-topic or mostly so. They are kept on the map, not dropped, and
+their names in `labels.json` end in "(off-topic)":
+
+- S79 accidents, occupational and traffic injury (603 papers)
+- S89 telecom "handover", networks and food safety (500), which comes in through the handoff terms
+- S157 biofilms and antimicrobial materials (739)
+- S188 lab science, sequencing and assay validation (757)
+- topic 15 "Drug therapy efficacy & safety trials", mainly its subtopics S10, S108 and S109 (drug
+  efficacy and safety trials)
+- S60 cardiac intervention safety
+
 `QUERY_V1` in `fetch_corpus.py` reproduces the first map:
 `python fetch_corpus.py --query v1 --out data/raw_v1`.
 
@@ -85,7 +102,8 @@ about 2% in a sample of 60 were patient safety, mostly infection-control papers 
 
 1. `fetch_corpus.py` downloads the records through NCBI E-utilities, one publication month at a
    time (PubMed returns at most 10,000 ids per search), including NCBI Bookshelf chapters such as
-   AHRQ's *Advances in Patient Safety*.
+   AHRQ's *Advances in Patient Safety*. Papers dated only by year match every month, so the raw
+   files hold duplicates (203,342 records for 142,049 PMIDs); `embed.py` keeps one per PMID.
 2. `embed.py` embeds title + abstract with the
    [MedCPT article encoder](https://huggingface.co/ncbi/MedCPT-Article-Encoder) (768-d, CLS pooling).
 3. `build_map.py` centres the embeddings, reduces them to 50 dimensions with PCA, clusters them with
@@ -93,22 +111,30 @@ about 2% in a sample of 60 were patient safety, mostly infection-control papers 
    belong to) and projects them to 2D with UMAP (cosine, 30 neighbours).
 4. Topic and subtopic names in `labels.json` were written by an AI model (Claude) from each
    cluster's distinctive terms (class-based TF-IDF), over-represented MeSH headings and sample
-   titles (`dump_for_labels.py`). They are descriptive, not authoritative.
+   titles (`dump_for_labels.py`). They are descriptive, not authoritative. The v2 map has 30
+   topics, from "Nursing workforce & safety culture" to "Maternal near miss & obstetric safety",
+   and 200 subtopics (see `labels.json`).
 5. `build_site.py` computes each paper's five nearest neighbours (cosine on the embeddings) and
    writes the site payload to `site/`.
 
-`plot_map.py` draws a static overview (`docs/map_overview.png`).
+`plot_map.py` draws a static overview (`docs/map_overview.png`). `plot_ai_trend.py` draws
+`docs/ai_trend.png`: a paper counts as AI / ML if its title or abstract mentions machine or deep
+learning, artificial intelligence, NLP, neural networks or (large) language models, or it has an
+AI / machine-learning MeSH heading; trials are papers typed Randomized Controlled Trial.
 
 ![Overview](docs/map_overview.png)
 
 ## Running it
 
 ```
-python -m venv .venv && .venv/Scripts/pip install torch transformers sentence-transformers umap-learn scikit-learn pandas pyarrow matplotlib adjustText
+python -m venv .venv && .venv/Scripts/pip install torch --index-url https://download.pytorch.org/whl/cu126
+.venv/Scripts/pip install transformers sentence-transformers umap-learn scikit-learn pandas pyarrow matplotlib adjustText
 python fetch_corpus.py        # ~1 h for v2 (~142k papers), network only; writes data/raw/
 python embed.py               # ~15 min for v2 on a 12 GB GPU
-python build_map.py --drop drop_pmids.csv
+python build_map.py --drop drop_pmids.csv   # ~3 min
+python dump_for_labels.py     # cluster summaries for naming topics in labels.json
 python build_site.py
+python plot_map.py && python plot_ai_trend.py   # figures, written to data/ (copy to docs/)
 python -m http.server --directory site 8000
 ```
 

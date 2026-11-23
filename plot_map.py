@@ -23,12 +23,12 @@ NAMES = {int(k): v for k, v in
          json.loads((Path(__file__).parent / "labels.json").read_text(encoding="utf-8"))["topics"].items()}
 # Hand grouping of the 30 topics (ids as in labels.json) for the small multiples.
 FAMILIES = {
-    "Core patient safety": [27, 11, 17, 22, 5],
-    "Infection & antimicrobials": [13, 25, 7, 0],
-    "Drug & treatment harms": [10, 4, 14, 28],
-    "Procedures & specialties": [21, 23, 16, 2, 12, 26],
-    "Populations & settings": [19, 29, 15, 1, 18, 3, 9],
-    "Health systems & QI": [8, 6, 20, 24],
+    "Safety systems, diagnosis & law": [21, 23, 27, 25, 0],
+    "Medication safety": [17, 20, 7, 8, 26],
+    "Infection prevention": [11, 12, 5, 24, 3, 16, 9],
+    "Harms in hospital care": [13, 19, 18, 14, 1],
+    "Surgery, procedures & obstetrics": [6, 2, 22, 29],
+    "IT, mental health, devices & drug trials": [10, 28, 4, 15],
 }
 
 
@@ -107,7 +107,7 @@ def main():
     ax.text(0.0, -0.02, f"Corpus-wide: {overall:.0%} of papers are from 2020 or later. "
             "Cells with < 8 papers hidden.", transform=ax.transAxes, fontsize=9, color=INK2, va="top")
 
-    fig.suptitle("Patient safety & quality-of-care literature, PubMed 2000–2026  ·  MedCPT embeddings, UMAP, k-means (30)",
+    fig.suptitle("Patient safety literature, PubMed 2000–2026  ·  MedCPT embeddings, UMAP, k-means (30)",
                  x=0.01, ha="left", fontsize=16, color=INK)
     fig.text(0.01, 0.005, "Nearby points are semantically similar papers. Topic names are provisional "
              "(from distinctive title terms and MeSH headings). Label number = papers in topic.",
