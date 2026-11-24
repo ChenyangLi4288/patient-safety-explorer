@@ -1,14 +1,21 @@
 """PubMed query definitions for the patient-safety corpus, plus hit counts (no download).
 
-Two versions live here:
+Three versions live here:
 
 * v1 (QUERY_V1_TERM): the query behind the first map (255,023 papers, October 2026). Kept
   verbatim for reproducibility. Note that the `tiab_adverse_event` component has no
   parentheses of its own, and PubMed evaluates AND/OR left to right. So v1 actually ran as
   `(all other CORE terms OR "adverse event*") AND (hospital* OR inpatient* OR "health care"
   OR healthcare)`, OR the broad quality-of-care terms.
-* v2 (QUERY_TERM): the current query, built and checked with validate_query.py. Each
-  component is wrapped in its own parentheses.
+* v2 (QUERY_V2_TERM): the query behind the current map (142,049 papers retrieved
+  23 November 2026; the map is v2 plus drop_pmids.csv). Each component is wrapped in its own
+  parentheses.
+* v3 (QUERY_TERM): the current query, for future refreshes. It is v2 with clinical-context
+  requirements on the handover, incident, near-miss, safety-incident, Safety Management and
+  health-IT terms, and a materials/drug-discovery exclusion on the infection-prevention part.
+  It also drops animal-only and lab-chemistry/sequencing papers that carry no explicit safety
+  term. These changes remove about half of the four off-topic v2 clusters added to
+  drop_pmids.csv on 2026-11-24. Checked with validate_query.py.
 
 Usage: python count_corpus.py [--v1]
 """
@@ -181,9 +188,65 @@ COMPONENTS_V2 = {
 }
 CORE_V2 = [k for k in COMPONENTS_V2 if k != "quality_improvement_safety"]
 QUALITY_V2 = ["quality_improvement_safety"]
-CORE_Q = _or(COMPONENTS_V2[k] for k in CORE_V2)
-QUALITY_Q = _or(COMPONENTS_V2[k] for k in QUALITY_V2)
-QUERY_TERM = f"{CORE_Q} OR {QUALITY_Q}"
+CORE_Q_V2 = _or(COMPONENTS_V2[k] for k in CORE_V2)
+QUALITY_Q_V2 = _or(COMPONENTS_V2[k] for k in QUALITY_V2)
+QUERY_V2_TERM = f"{CORE_Q_V2} OR {QUALITY_Q_V2}"
+
+# ---------------------------------------------------------------- v3 (current)
+# A clinical setting or health-care actor, required next to terms that are also used in
+# industry, transport and engineering (near miss, incident reports, safety incidents).
+CLINICAL_CTX = ('(patient*[tiab] OR hospital*[tiab] OR inpatient*[tiab] OR clinical[tiab] OR clinician*[tiab] OR '
+                'nurs*[tiab] OR physician*[tiab] OR doctor*[tiab] OR medication*[tiab] OR surg*[tiab] OR '
+                '"health care"[tiab] OR healthcare[tiab] OR ward*[tiab] OR ICU[tiab] OR "intensive care"[tiab] OR '
+                'pharmac*[tiab] OR "Patient Safety"[MeSH] OR "Health Facilities"[MeSH] OR "Health Personnel"[MeSH])')
+HANDOFF_CTX = ('(patient*[tiab] OR nurs*[tiab] OR physician*[tiab] OR doctor*[tiab] OR hospital*[tiab] OR shift*[tiab] OR '
+               'ward*[tiab] OR ICU[tiab] OR "intensive care"[tiab] OR clinical[tiab] OR resident*[tiab] OR surg*[tiab] OR '
+               'anesth*[tiab] OR anaesth*[tiab] OR "emergency department"[tiab] OR "Patient Handoff"[MeSH])')
+# Antimicrobial materials, coatings, phages and drug discovery, unless the title names a care
+# setting or infection-control practice.
+MATERIALS = ('(biofilm*[ti] OR antibiofilm[tiab] OR nanoparticle*[tiab] OR nanomaterial*[tiab] OR coating*[ti] OR '
+             'coated[ti] OR polymer*[ti] OR phage*[ti] OR bacteriophage*[tiab] OR peptide*[ti] OR "in vitro"[ti] OR '
+             '"antibacterial activity"[tiab] OR "antimicrobial activity"[tiab] OR "antibacterial properties"[tiab] OR '
+             '"Nanoparticles"[MeSH] OR "Coated Materials, Biocompatible"[MeSH] OR "Bacteriophages"[MeSH] OR '
+             '"Phage Therapy"[MeSH] OR inhibitor*[ti] OR synerg*[ti] OR susceptibility[ti] OR antibacterial[ti] OR '
+             'antifungal[ti] OR vaccine*[ti] OR genom*[ti] OR nano*[ti] OR silver[ti] OR copper[ti] OR '
+             '"molecular docking"[tiab] OR "Microbial Sensitivity Tests"[MeSH])')
+CARE_TITLE = ('(patient*[ti] OR hospital*[ti] OR inpatient*[ti] OR ward*[ti] OR ICU[ti] OR "intensive care"[ti] OR '
+              'nurs*[ti] OR "infection control"[ti] OR "infection prevention"[ti] OR "health care"[ti] OR '
+              'healthcare[ti] OR "Hand Hygiene"[MeSH] OR "Infection Control"[Majr] OR bloodstream[ti] OR '
+              '"central line"[ti] OR CLABSI[ti] OR catheter*[ti] OR outbreak*[ti])')
+# Lab chemistry, sequencing and animal-only papers, unless they carry an explicit safety term.
+LAB_METHODS = ('("Chromatography"[MeSH] OR "Mass Spectrometry"[MeSH] OR "High-Throughput Nucleotide Sequencing"[MeSH] OR '
+               '"Sequence Analysis, DNA"[MeSH] OR "Cell Culture Techniques"[MeSH] OR "Plants"[MeSH] OR "Soil"[MeSH])')
+EXPLICIT_SAFETY = ('("Patient Safety"[MeSH] OR "Medical Errors"[MeSH:noexp] OR "Medication Errors"[MeSH] OR '
+                   '"Diagnostic Errors"[MeSH:noexp] OR "patient safety"[tiab] OR "medical error*"[tiab] OR '
+                   '"medication error*"[tiab] OR "diagnostic error*"[tiab] OR "laboratory error*"[tiab] OR '
+                   '"preanalytical error*"[tiab] OR "pre-analytical error*"[tiab] OR specimen[tiab] OR '
+                   '"Cross Infection"[MeSH] OR "Infection Control"[MeSH] OR "Disease Outbreaks"[MeSH] OR '
+                   '"Decision Support Systems, Clinical"[MeSH] OR "Medical Order Entry Systems"[MeSH])')
+EXCLUDE_V3 = f'(((Animals[MeSH] NOT Humans[MeSH]) OR {LAB_METHODS}) NOT {EXPLICIT_SAFETY})'
+
+COMPONENTS_V3 = dict(COMPONENTS_V2)
+COMPONENTS_V3["mesh_safety_systems"] = COMPONENTS_V2["mesh_safety_systems"].replace(
+    f'("Safety Management"[MeSH] AND (patient*[tiab] OR {CARE}))',
+    '("Safety Management"[MeSH] AND (patient*[tiab] OR inpatient*[tiab] OR "Patient Safety"[MeSH] OR "Patients"[MeSH]))')
+COMPONENTS_V3["hai_prevention"] = f'({COMPONENTS_V2["hai_prevention"]}) NOT ({MATERIALS} NOT {CARE_TITLE})'
+COMPONENTS_V3["hit_safety"] = COMPONENTS_V2["hit_safety"].replace(
+    f'({HIT} AND {HIT_SAFETY})', f'({HIT} AND {HIT_SAFETY} AND {CLINICAL_CTX})')
+COMPONENTS_V3["tiab_incidents"] = (
+    f'"never event*"[tiab] OR "trigger tool*"[tiab] OR (("sentinel event*"[tiab] OR "incident report*"[tiab]) AND {CLINICAL_CTX}) OR '
+    '(("near miss*"[tiab] AND (error*[tiab] OR medication*[tiab] OR incident*[tiab] OR report*[tiab] OR '
+    f'"patient safety"[tiab]) AND {CLINICAL_CTX}) NOT "maternal near miss*"[tiab])')
+COMPONENTS_V3["tiab_measurement"] = COMPONENTS_V2["tiab_measurement"].replace(
+    '"safety incident*"[tiab] OR "adverse incident*"[tiab] OR ',
+    f'(("safety incident*"[tiab] OR "adverse incident*"[tiab]) AND {CLINICAL_CTX}) OR ')
+COMPONENTS_V3["tiab_handoff"] = f'({COMPONENTS_V2["tiab_handoff"]}) AND {HANDOFF_CTX}'
+V3_CHANGED = ("mesh_safety_systems", "hai_prevention", "hit_safety", "tiab_incidents", "tiab_measurement", "tiab_handoff")
+assert all(COMPONENTS_V3[k] != COMPONENTS_V2[k] for k in V3_CHANGED)
+CORE_V3, QUALITY_V3 = CORE_V2, QUALITY_V2
+CORE_Q = _or(COMPONENTS_V3[k] for k in CORE_V3)
+QUALITY_Q = _or(COMPONENTS_V3[k] for k in QUALITY_V3)
+QUERY_TERM = f"({CORE_Q} OR {QUALITY_Q}) NOT {EXCLUDE_V3}"
 
 # v1 components that are broad on their own, kept for comparison
 V1_REFERENCE = {
@@ -194,13 +257,13 @@ V1_REFERENCE = {
 }
 COMBOS = {
     "v1 query as run, abstract, 2000+": f"({QUERY_V1_TERM}) AND {HAS_ABSTRACT} AND {SINCE_2000}",
-    "v2 CORE, abstract, 2000+": f"{CORE_Q} AND {HAS_ABSTRACT} AND {SINCE_2000}",
-    "v2 quality arm only (not in CORE)": f"({QUALITY_Q} NOT {CORE_Q}) AND {HAS_ABSTRACT} AND {SINCE_2000}",
-    "v2 query, abstract, 2000+": f"({QUERY_TERM}) AND {HAS_ABSTRACT} AND {SINCE_2000}",
-    "v2 AND v1": f"({QUERY_TERM}) AND ({QUERY_V1_TERM}) AND {HAS_ABSTRACT} AND {SINCE_2000}",
-    "v2 NOT v1 (added)": f"({QUERY_TERM}) NOT ({QUERY_V1_TERM}) AND {HAS_ABSTRACT} AND {SINCE_2000}",
-    "v1 NOT v2 (removed)": f"({QUERY_V1_TERM}) NOT ({QUERY_TERM}) AND {HAS_ABSTRACT} AND {SINCE_2000}",
-    "v2 x ML/AI, abstract": f'({QUERY_TERM}) AND {HAS_ABSTRACT} AND {SINCE_2000} AND ("machine learning"[tiab] OR "deep learning"[tiab] OR "artificial intelligence"[tiab] OR "natural language processing"[tiab] OR "large language model*"[tiab] OR "Machine Learning"[MeSH])',
+    "v2 query, abstract, 2000+": f"({QUERY_V2_TERM}) AND {HAS_ABSTRACT} AND {SINCE_2000}",
+    "v3 CORE, abstract, 2000+": f"{CORE_Q} AND {HAS_ABSTRACT} AND {SINCE_2000}",
+    "v3 quality arm only (not in CORE)": f"({QUALITY_Q} NOT {CORE_Q}) AND {HAS_ABSTRACT} AND {SINCE_2000}",
+    "v3 query, abstract, 2000+": f"({QUERY_TERM}) AND {HAS_ABSTRACT} AND {SINCE_2000}",
+    "v3 exclusion within v2": f"({QUERY_V2_TERM}) AND {EXCLUDE_V3} AND {HAS_ABSTRACT} AND {SINCE_2000}",
+    "v3 AND v1": f"({QUERY_TERM}) AND ({QUERY_V1_TERM}) AND {HAS_ABSTRACT} AND {SINCE_2000}",
+    "v3 x ML/AI, abstract": f'({QUERY_TERM}) AND {HAS_ABSTRACT} AND {SINCE_2000} AND ("machine learning"[tiab] OR "deep learning"[tiab] OR "artificial intelligence"[tiab] OR "natural language processing"[tiab] OR "large language model*"[tiab] OR "Machine Learning"[MeSH])',
 }
 
 
@@ -223,9 +286,9 @@ def main():
     ap.add_argument("--v1", action="store_true", help="also count the v1 components")
     args = ap.parse_args()
     lim = f" AND {HAS_ABSTRACT} AND {SINCE_2000}"
-    rest = lambda k: _or(COMPONENTS_V2[j] for j in COMPONENTS_V2 if j != k)  # noqa: E731
-    print(f"== v2 components (abstract, 2000+)        {'hits':>8s} {'unique':>8s}")
-    for k, q in COMPONENTS_V2.items():
+    rest = lambda k: _or(COMPONENTS_V3[j] for j in COMPONENTS_V3 if j != k)  # noqa: E731
+    print(f"== v3 components (abstract, 2000+; before the exclusion) {'hits':>8s} {'unique':>8s}")
+    for k, q in COMPONENTS_V3.items():
         print(f"{k:40s} {count(f'({q}){lim}'):>8,d} {count(f'(({q}) NOT {rest(k)}){lim}'):>8,d}")
     if args.v1:
         print("\n== v1 components (abstract, 2000+)")
@@ -237,7 +300,7 @@ def main():
     print("\n== combined")
     for k, q in COMBOS.items():
         print(f"{k:40s} {count(q):>8,d}")
-    print("\n== v2 query, abstract, by 5-year bin")
+    print("\n== v3 query, abstract, by 5-year bin")
     for y0 in range(2000, 2030, 5):
         q = f'({QUERY_TERM}) AND {HAS_ABSTRACT} AND ("{y0}/01/01"[dp] : "{y0 + 4}/12/31"[dp])'
         print(f"{y0}-{y0 + 4}  {count(q):>10,d}")

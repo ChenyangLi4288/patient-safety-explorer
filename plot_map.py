@@ -23,12 +23,12 @@ NAMES = {int(k): v for k, v in
          json.loads((Path(__file__).parent / "labels.json").read_text(encoding="utf-8"))["topics"].items()}
 # Hand grouping of the 30 topics (ids as in labels.json) for the small multiples.
 FAMILIES = {
-    "Safety systems, diagnosis & law": [21, 23, 27, 25, 0],
-    "Medication safety": [17, 20, 7, 8, 26],
-    "Infection prevention": [11, 12, 5, 24, 3, 16, 9],
-    "Harms in hospital care": [13, 19, 18, 14, 1],
-    "Surgery, procedures & obstetrics": [6, 2, 22, 29],
-    "IT, mental health, devices & drug trials": [10, 28, 4, 15],
+    "Safety systems, diagnosis, law & workforce": [24, 11, 28, 18, 7, 25],
+    "Medication safety": [20, 0, 15, 9, 23, 17],
+    "Infection prevention": [13, 5, 29, 19, 26, 21, 27],
+    "Harms in hospital care": [4, 16, 14, 1, 12],
+    "Surgery, procedures & obstetrics": [2, 8, 3],
+    "Health IT, mental health & radiology": [22, 10, 6],
 }
 
 

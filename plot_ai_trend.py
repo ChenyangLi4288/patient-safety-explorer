@@ -30,6 +30,7 @@ AI_MESH = {"Artificial Intelligence", "Machine Learning", "Deep Learning", "Natu
 def main():
     df = pd.read_parquet(DATA / "corpus.parquet", columns=["pmid", "title", "abstract", "year", "mesh_terms",
                                                           "pub_types"])
+    df = df[df["pmid"].isin(pd.read_parquet(DATA / "map.parquet", columns=["pmid"])["pmid"])]  # papers on the map
     df = df[df["year"].between(Y0, Y1)]
     text = df["title"].fillna("") + " " + df["abstract"].fillna("")
     df["ai"] = text.str.contains(AI_TEXT) | df["mesh_terms"].map(lambda ms: bool(AI_MESH & set(ms)))

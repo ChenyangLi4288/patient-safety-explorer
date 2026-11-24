@@ -39,7 +39,7 @@ Usage
   python validate_query.py                      recall + precision report, writes summary.json
   python validate_query.py --refresh-authors    also re-pull the author records and list
                                                 new, unlabelled PMIDs
-  python validate_query.py --draw NAME --source QUERY|QUERY_V1|<v2 component> [--n 50]
+  python validate_query.py --draw NAME --source QUERY|QUERY_V2|QUERY_V1|<v3 component> [--n 50]
                                                 draw a new random sample (empty labels) and
                                                 append it to precision_samples.csv for labelling
 
@@ -54,14 +54,15 @@ import random
 from datetime import date
 from pathlib import Path
 
-from count_corpus import (COMPONENTS_V2, HAS_ABSTRACT, QUERY_TERM, QUERY_V1_TERM, SINCE_2000, count)
+from count_corpus import (COMPONENTS_V3 as COMPONENTS, HAS_ABSTRACT, QUERY_TERM, QUERY_V1_TERM, QUERY_V2_TERM,
+                          SINCE_2000, count)
 from fetch_corpus import _request, fetch_records
 
 DIR = Path(__file__).parent / "docs" / "query_validation"
 CAL, HOLD = DIR / "calibration_labels.csv", DIR / "holdout_labels.csv"
 SAMPLES, META, SUMMARY = DIR / "precision_samples.csv", DIR / "sample_queries.json", DIR / "summary.json"
 LIMITS = f"{HAS_ABSTRACT} AND {SINCE_2000}"
-QUERIES = {"QUERY": QUERY_TERM, "QUERY_V1": QUERY_V1_TERM, **COMPONENTS_V2}
+QUERIES = {"QUERY": QUERY_TERM, "QUERY_V2": QUERY_V2_TERM, "QUERY_V1": QUERY_V1_TERM, **COMPONENTS}
 POST_HOC = "tiab_diagnostic_safety"  # added after inspecting hold-out misses
 # Author searches behind the label files (2000+, with abstract). Adelman JS also matches other
 # people (e.g. James S. Adelman, Memphis/Warwick); only Jason S. Adelman's papers are labelled.
@@ -143,9 +144,9 @@ def recall_report(path: Path, refresh: bool) -> dict:
         print(f"  author search now returns {len(found)} PMIDs; {len(new)} not labelled"
               + (f" (e.g. {', '.join(new[:10])})" if new else ""))
     hits = {k: members(q, pos | neg) for k, q in QUERIES.items()}
-    others = lambda k: set().union(*(hits[j] for j in COMPONENTS_V2 if j != k))  # noqa: E731
+    others = lambda k: set().union(*(hits[j] for j in COMPONENTS if j != k))  # noqa: E731
     out = {"n": len(rows), "n_safety": len(pos)}
-    for k in ("QUERY_V1", "QUERY"):
+    for k in ("QUERY_V1", "QUERY_V2", "QUERY"):
         out[k] = {"recall": len(hits[k] & pos) / len(pos), "safety_hits": len(hits[k] & pos),
                   "non_safety_hits": len(hits[k] & neg)}
         print(f"  {k:9s} recall {fmt(len(hits[k] & pos), len(pos))}; also retrieves "
@@ -155,7 +156,7 @@ def recall_report(path: Path, refresh: bool) -> dict:
     print(f"  QUERY without {POST_HOC}: recall {fmt(len(pre & pos), len(pos))}")
     print(f"  {'component':30s} {'safety hits':>11s} {'unique':>7s} {'non-safety':>10s}")
     out["components"] = {}
-    for k in COMPONENTS_V2:
+    for k in COMPONENTS:
         u = hits[k] - others(k)
         out["components"][k] = {"safety_hits": len(hits[k] & pos), "unique_safety": len(u & pos),
                                 "non_safety_hits": len(hits[k] & neg)}
@@ -184,29 +185,33 @@ def precision_report() -> dict:
             continue
         target = meta.get(name, {}).get("target")
         cur = rs
-        if target in QUERIES:  # keep the papers that the target query retrieves today
-            m = members(QUERIES[target], [r["pmid"] for r in rs])
-            cur = [r for r in rs if r["pmid"] in m]
+        neg = bool(target) and target.startswith("NOT:")  # papers the query does NOT retrieve
+        tq = target[4:] if neg else target
+        if tq in QUERIES:  # keep the papers that the target query retrieves today (or not)
+            m = members(QUERIES[tq], [r["pmid"] for r in rs])
+            cur = [r for r in rs if (r["pmid"] in m) != neg]
         y = sum(r["label"] == "Y" for r in cur)
         yb = sum(r["label"] in ("Y", "B") for r in cur)
         out[name] = {"target": target, "n": len(cur), "Y": y, "YB": yb,
                      "strict": wilson(y, len(cur)), "lenient": wilson(yb, len(cur))}
-        tgt = f" -> {target} ({len(cur)}/{len(rs)} still match)" if target in QUERIES else ""
+        tgt = f" -> {target} ({len(cur)}/{len(rs)} still match)" if tq in QUERIES else ""
         print(f"  {name:42s} strict {fmt(y, len(cur)):24s} lenient {fmt(yb, len(cur))}{tgt}")
     # Whole-query estimates
     pool = [r for n in ("v2_draft_corpus", "v2_topup") for r in by.get(n, [])]
-    m = members(QUERY_TERM, [r["pmid"] for r in pool])
-    cur = [r for r in pool if r["pmid"] in m]
-    out["QUERY"] = {"n": len(cur), "strict": wilson(sum(r["label"] == "Y" for r in cur), len(cur)),
+    for key, q in (("QUERY_V2", QUERY_V2_TERM), ("QUERY", QUERY_TERM)):
+        m = members(q, [r["pmid"] for r in pool])
+        cur = [r for r in pool if r["pmid"] in m]
+        out[key] = {"n": len(cur), "strict": wilson(sum(r["label"] == "Y" for r in cur), len(cur)),
                     "lenient": wilson(sum(r["label"] in ("Y", "B") for r in cur), len(cur))}
     out["QUERY_V1"] = {k: out["v1_corpus"][k] for k in ("n", "strict", "lenient")} if "v1_corpus" in out else {}
     return out
 
 
 def sizes() -> dict:
-    v1, v2 = f"({QUERY_V1_TERM}) AND {LIMITS}", f"({QUERY_TERM}) AND {LIMITS}"
-    s = {"QUERY_V1": count(v1), "QUERY": count(v2), "both": count(f"{v1} AND ({QUERY_TERM})")}
-    s["added"], s["removed"] = s["QUERY"] - s["both"], s["QUERY_V1"] - s["both"]
+    v1, v2, v3 = (f"({q}) AND {LIMITS}" for q in (QUERY_V1_TERM, QUERY_V2_TERM, QUERY_TERM))
+    s = {"QUERY_V1": count(v1), "QUERY_V2": count(v2), "QUERY": count(v3),
+         "v3_and_v1": count(f"{v3} AND ({QUERY_V1_TERM})")}
+    s["v2_not_v3"] = s["QUERY_V2"] - s["QUERY"]  # v3 only narrows v2, so v3 is a subset of v2
     return s
 
 
@@ -247,14 +252,15 @@ def main():
         return draw(args.draw, args.source, args.n, args.seed)
     summary = {"date": date.today().isoformat(), "sizes": sizes()}
     s = summary["sizes"]
-    print(f"== corpus size (abstract, 2000+): v1 {s['QUERY_V1']:,}  v2 {s['QUERY']:,}  "
-          f"both {s['both']:,}  added {s['added']:,}  removed {s['removed']:,}")
+    print(f"== corpus size (abstract, 2000+): v1 {s['QUERY_V1']:,}  v2 {s['QUERY_V2']:,}  v3 {s['QUERY']:,}  "
+          f"v2 NOT v3 {s['v2_not_v3']:,}  v3 AND v1 {s['v3_and_v1']:,}")
     summary["calibration"] = recall_report(CAL, args.refresh_authors)
     summary["holdout"] = recall_report(HOLD, args.refresh_authors)
     summary["precision"] = precision_report()
-    p1, p2 = summary["precision"].get("QUERY_V1", {}), summary["precision"]["QUERY"]
+    pr = summary["precision"]
     print("\n== summary")
-    for k, p, n in (("v1", p1, s["QUERY_V1"]), ("v2", p2, s["QUERY"])):
+    for k, p, n in (("v1", pr.get("QUERY_V1"), s["QUERY_V1"]), ("v2", pr["QUERY_V2"], s["QUERY_V2"]),
+                    ("v3", pr["QUERY"], s["QUERY"])):
         if p:
             st, le = p["strict"], p["lenient"]
             print(f"  {k}: precision strict {st[0]:.0%} [{st[1]:.0%}-{st[2]:.0%}], lenient {le[0]:.0%} "

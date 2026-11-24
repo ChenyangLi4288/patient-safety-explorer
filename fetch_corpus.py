@@ -5,10 +5,11 @@ publication month. Each month is written to data/raw/YYYY-MM.jsonl; months that
 already exist are skipped, so the script is resumable. data/raw/QUERY.txt records the
 query the files came from, and the script refuses to mix files from two queries.
 
-QUERY is the current (v2) query. QUERY_V1 is the query behind the first map; it is kept
-so that map can be reproduced (--query v1, into a separate --out directory).
+QUERY is the current (v3) query, for future refreshes. QUERY_V2 is the query behind the
+current map (fetched 23 November 2026) and QUERY_V1 the one behind the first map; both are kept
+so those maps can be reproduced (--query v2 / v1, into a separate --out directory).
 
-Usage: python fetch_corpus.py [--start 2000] [--end 2026] [--query v2|v1] [--out data/raw]
+Usage: python fetch_corpus.py [--start 2000] [--end 2026] [--query v3|v2|v1] [--out data/raw]
 """
 import argparse
 import calendar
@@ -22,10 +23,11 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-from count_corpus import HAS_ABSTRACT, QUERY_TERM, QUERY_V1_TERM
+from count_corpus import HAS_ABSTRACT, QUERY_TERM, QUERY_V1_TERM, QUERY_V2_TERM
 
 EUTILS = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
-QUERY = f"({QUERY_TERM}) AND {HAS_ABSTRACT}"  # v2, see count_corpus.py and validate_query.py
+QUERY = f"({QUERY_TERM}) AND {HAS_ABSTRACT}"  # v3, see count_corpus.py and validate_query.py
+QUERY_V2 = f"({QUERY_V2_TERM}) AND {HAS_ABSTRACT}"  # current map (142,049 papers, 23 Nov 2026)
 QUERY_V1 = f"({QUERY_V1_TERM}) AND {HAS_ABSTRACT}"  # first map (255,023 papers, Oct 2026)
 OUT = Path(__file__).parent / "data" / "raw"
 BATCH = 400
@@ -183,10 +185,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--start", type=int, default=2000)
     ap.add_argument("--end", type=int, default=2026)
-    ap.add_argument("--query", choices=["v2", "v1"], default="v2")
+    ap.add_argument("--query", choices=["v3", "v2", "v1"], default="v3")
     ap.add_argument("--out", type=Path, default=OUT)
     args = ap.parse_args()
-    query = QUERY if args.query == "v2" else QUERY_V1
+    query = {"v3": QUERY, "v2": QUERY_V2, "v1": QUERY_V1}[args.query]
     out = args.out
     out.mkdir(parents=True, exist_ok=True)
     stamp = out / "QUERY.txt"

@@ -1,6 +1,6 @@
 # Patient Safety Literature Explorer
 
-An interactive 2D map of 141,945 PubMed papers (2000–2026) on patient safety: medical,
+An interactive 2D map of 139,346 PubMed papers (2000–2026) on patient safety: medical,
 medication and diagnostic error, adverse events and harm from care, and how they are measured and prevented. Each point is a paper; nearby points are papers with similar
 titles and abstracts. Papers are grouped into 30 topics and 200 subtopics.
 
@@ -27,10 +27,17 @@ compute the map, and each paper links to its PubMed page.
 
 ## Corpus
 
-The map is built from the **v2 query** (`QUERY_TERM` in `count_corpus.py`, used by
-`fetch_corpus.py`). It returned 142,049 papers (retrieved 23 November 2026). 58 records had no
-abstract text, and 46 papers on the hand-made v1 drop list (`drop_pmids.csv`) were removed,
-leaving 141,945.
+The map is built from the **v2 query** (`QUERY_V2_TERM` in `count_corpus.py`). It returned
+142,049 papers (retrieved 23 November 2026). 58 records had no abstract text, and 2,645 papers on
+the drop list (`drop_pmids.csv`) were removed, leaving 139,346. The drop list has a `reason` column.
+It holds:
+
+- 3,843 papers from the off-topic cluster of the first map (environmental "air/water quality",
+  imaging physics), of which 46 match v2;
+- four off-topic subtopics of the first v2 map, removed on 24 November 2026: S79 accidents,
+  occupational and traffic injury (603 papers); S89 telecom "handover", networks and food safety
+  (500); S157 biofilms and antimicrobial materials (739); S188 lab science, sequencing and assay
+  validation (757). In 20-title samples, 0 to 2 papers per cluster were patient safety.
 
 The first map (October 2026) used the **v1 query**: 259,007 papers, of which 141 had no abstract
 text and 3,843 off-topic papers (environmental "air/water quality", imaging physics) were removed
@@ -84,19 +91,35 @@ about 2% in a sample of 60 were patient safety, mostly infection-control papers 
 
 ### Off-topic subtopics
 
-A few clusters of the v2 map are off-topic or mostly so. They are kept on the map, not dropped, and
-their names in `labels.json` end in "(off-topic)":
+Some clusters of the current map are off-topic or mostly so. They are kept on the map, not dropped,
+and their names in `labels.json` end in "(off-topic)":
 
-- S79 accidents, occupational and traffic injury (603 papers)
-- S89 telecom "handover", networks and food safety (500), which comes in through the handoff terms
-- S157 biofilms and antimicrobial materials (739)
-- S188 lab science, sequencing and assay validation (757)
-- topic 15 "Drug therapy efficacy & safety trials", mainly its subtopics S10, S108 and S109 (drug
-  efficacy and safety trials)
-- S60 cardiac intervention safety
+- in topic 9 "Pharmacovigilance & drug safety trials": S85 cancer therapy and toxicity, S39 biologic
+  and immunotherapy trials, S63 drug development and trial safety, S193 cardiometabolic drug safety
+  (drug efficacy and safety trials; these were topic 15 on the first v2 map)
+- S94 cardiac interventions safety
+- S121 neurologic and psychiatric disorders
+- S42 injury epidemiology and trauma
 
-`QUERY_V1` in `fetch_corpus.py` reproduces the first map:
-`python fetch_corpus.py --query v1 --out data/raw_v1`.
+**v3** (`QUERY_TERM`, the default in `fetch_corpus.py` for future refreshes) is v2 with these changes:
+
+- handover, incident-report, sentinel-event, near-miss, safety-incident and health-IT terms must
+  appear with a clinical setting or health-care actor (patient, nurse, physician, hospital, ward,
+  ICU, medication and so on);
+- *Safety Management* needs a patient term, not just "health care";
+- the infection-prevention part leaves out antimicrobial materials, coatings, phages and drug
+  discovery unless the title names a care setting or infection-control practice;
+- animal-only and lab-chemistry/sequencing papers are excluded unless they carry an explicit
+  safety term.
+
+v3 retrieves 138,521 papers (24 November 2026), 3,565 fewer than v2. Recall is unchanged: 93% on
+the calibration set and 87% on the hold-out set. Strict precision is 48% [40–56%], lenient 65%.
+Of the current map papers v3 leaves out (outside the four dropped clusters), 1 of 31 sampled was
+patient safety. v3 would have kept out 1,325 of the 2,599 papers in the four dropped clusters
+(S79 62%, S89 60%, S157 55%, S188 32%). Keep applying `drop_pmids.csv` after a refresh.
+
+`QUERY_V2` and `QUERY_V1` in `fetch_corpus.py` reproduce the current and the first map:
+`python fetch_corpus.py --query v2 --out data/raw_v2` (or `--query v1 --out data/raw_v1`).
 
 ## Method
 
@@ -111,16 +134,17 @@ their names in `labels.json` end in "(off-topic)":
    belong to) and projects them to 2D with UMAP (cosine, 30 neighbours).
 4. Topic and subtopic names in `labels.json` were written by an AI model (Claude) from each
    cluster's distinctive terms (class-based TF-IDF), over-represented MeSH headings and sample
-   titles (`dump_for_labels.py`). They are descriptive, not authoritative. The v2 map has 30
-   topics, from "Nursing workforce & safety culture" to "Maternal near miss & obstetric safety",
-   and 200 subtopics (see `labels.json`).
+   titles (`dump_for_labels.py`). They are descriptive, not authoritative. The current map has
+   30 topics, from "Pharmacy practice & medication management" to "Catheter-associated
+   infections", and 200 subtopics (see `labels.json`).
 5. `build_site.py` computes each paper's five nearest neighbours (cosine on the embeddings) and
    writes the site payload to `site/`.
 
 `plot_map.py` draws a static overview (`docs/map_overview.png`). `plot_ai_trend.py` draws
 `docs/ai_trend.png`: a paper counts as AI / ML if its title or abstract mentions machine or deep
 learning, artificial intelligence, NLP, neural networks or (large) language models, or it has an
-AI / machine-learning MeSH heading; trials are papers typed Randomized Controlled Trial.
+AI / machine-learning MeSH heading; trials are papers typed Randomized Controlled Trial. It covers
+the papers on the map.
 
 ![Overview](docs/map_overview.png)
 
@@ -129,7 +153,7 @@ AI / machine-learning MeSH heading; trials are papers typed Randomized Controlle
 ```
 python -m venv .venv && .venv/Scripts/pip install torch --index-url https://download.pytorch.org/whl/cu126
 .venv/Scripts/pip install transformers sentence-transformers umap-learn scikit-learn pandas pyarrow matplotlib adjustText
-python fetch_corpus.py        # ~1 h for v2 (~142k papers), network only; writes data/raw/
+python fetch_corpus.py        # ~1 h (~140k papers), network only; v3 by default; writes data/raw/
 python embed.py               # ~15 min for v2 on a 12 GB GPU
 python build_map.py --drop drop_pmids.csv   # ~3 min
 python dump_for_labels.py     # cluster summaries for naming topics in labels.json

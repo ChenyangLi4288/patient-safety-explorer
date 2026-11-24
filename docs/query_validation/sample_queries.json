@@ -523,5 +523,12 @@
   "n": 60,
   "note": "intermediate-v2 papers not in v1",
   "drawn": "2026-11-23"
+ },
+ "v2_map_removed_by_v3": {
+  "drawn_from": "current map papers (v2 + drop list) not retrieved by a draft of v3, excluding subtopics S79/S89/S157/S188",
+  "target": "NOT:QUERY",
+  "n": 40,
+  "note": "random 40, seed 3; target keeps those still outside the final v3",
+  "drawn": "2026-11-24"
  }
 }
